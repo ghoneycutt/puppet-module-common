@@ -347,12 +347,15 @@ class common (
       fail('common::lsb_provider_name is not a string.')
     }
 
-    # basic filesystem requirements
-    file { "/opt/${lsb_provider_name}":
-      ensure => directory,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
+    if $lsb_provider_name != 'UNSET' {
+
+      # basic filesystem requirements
+      file { "/opt/${lsb_provider_name}":
+        ensure => directory,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+      }
     }
   }
 
