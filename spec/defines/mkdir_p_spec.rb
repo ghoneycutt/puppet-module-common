@@ -2,10 +2,13 @@ require 'spec_helper'
 
 describe 'common::mkdir_p' do
   context 'should create new directory' do
-    let(:title) { '/nonexistent' }
+    let(:title) { '/some/dir/structure' }
 
-    it do
-      should contain_exec('mkdir_p-/nonexistent').with_command('mkdir -p /nonexistent')
-    end
+    it {
+      should contain_exec('mkdir_p-/some/dir/structure').with({
+        'command' => 'mkdir -p /some/dir/structure',
+        'unless'  => 'test -d /some/dir/structure',
+      })
+    }
   end
 end
