@@ -1,5 +1,7 @@
 # puppet-module-common #
-========================
+
+[![Build Status](
+https://api.travis-ci.org/ghoneycutt/puppet-module-common.png?branch=master)](https://travis-ci.org/ghoneycutt/puppet-module-common)
 
 common module to be applied to **ALL** nodes
 
