@@ -12,18 +12,5 @@ describe 'interface2factname' do
       should run.with_params('bond0:1').and_return('ipaddress_bond0_1')
     end
   end
-#  describe 'should fail with invalid parameters' do
-#    it 'should fail with no params' do
-#      should run.with_params('eth0').and_raise_error(Puppet::ParseError)
-#    end
-#    it 'should fail with too many params' do
-#      should run.with_params('eth0', 'eth1')and_raise_error(Puppet::ParseError)
-#    end
-#  end
 end
 
-#      should run.with_params().and_raise_error(ArgumentError)
-#            should run.with_params('User[dan]').and_raise_error(ArgumentError)
-#                  should run.with_params('User[dan]', {}).and_raise_error(ArgumentError)
-#                        should run.with_params('User[dan]', '').and_return('')
-#
