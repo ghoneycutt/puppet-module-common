@@ -7,7 +7,7 @@ common module to be applied to **ALL** nodes
 
 # Compatibility #
 
-Module is generic enough to work on any system, though the individual modules that it could potentially include could be very OS specific.
+Module is generic enough to work on any system, though the individual modules that it could potentially include could be very platform specific.
 
 ===
 
@@ -79,19 +79,19 @@ Boolean to include ghoneycutt/inittab
 
 enable_mailaliases
 ------------------
-Boolean to include ghoneycutt/
+Boolean to include ghoneycutt/mailaliases
 
 - *Default*: false
 
 enable_motd
 -----------
-Boolean to include ghoneycutt/
+Boolean to include ghoneycutt/motd
 
 - *Default*: false
 
 enable_network
 --------------
-Boolean to include ghoneycutt/
+Boolean to include ghoneycutt/network
 
 - *Default*: false
 
@@ -155,7 +155,7 @@ Boolean to include ghoneycutt/wget
 
 - *Default*: false
 
-### include classes based on virtual or physical ###
+### include classes based on `is_virtual` fact ###
 
 enable_virtual
 -----------
@@ -169,7 +169,7 @@ Boolean to include ghoneycutt/physical
 
 - *Default*: false
 
-### includes classes based on osfamily fact ###
+### includes classes based on `osfamily` fact ###
 
 enable_debian
 -----------
