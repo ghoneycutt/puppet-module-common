@@ -11,4 +11,17 @@ describe 'common::mkdir_p' do
       })
     }
   end
+
+  context 'should fail with a path that is not absolute' do
+    let(:title) { 'not/a/valid/absolute/path' }
+
+    it do
+      expect {
+        should contain_exec('mkdir_p-not/a/valid/absolute/path').with({
+          'command' => 'mkdir -p not/a/valid/absolute/path',
+          'unless'  => 'test -d not/a/valid/absolute/path',
+        })
+      }.to raise_error(Puppet::Error)
+    end
+  end
 end
