@@ -23,8 +23,10 @@ describe 'common' do
       context 'manage_root_password => true with default root_password' do
         let(:facts) { {:osfamily => 'RedHat' } }
         let(:params) { {:manage_root_password => true } }
+
+        it { should include_class('common') }
+
         it {
-          should include_class('common')
           should contain_user('root').with({
             'password' => '$1$cI5K51$dexSpdv6346YReZcK2H1k.',
           })
@@ -34,8 +36,10 @@ describe 'common' do
       context 'manage_root_password => true and root_password => foo' do
         let(:facts) { {:osfamily => 'RedHat' } }
         let(:params) { {:manage_root_password => true, :root_password => 'foo' } }
+
+        it { should include_class('common') }
+
         it {
-          should include_class('common')
           should contain_user('root').with({
             'password' => 'foo',
           })
@@ -47,8 +51,10 @@ describe 'common' do
       context 'create_opt_lsb_provider_name_dir => true and lsb_provider_name => UNSET [default]' do
         let(:facts) { {:osfamily => 'RedHat' } }
         let(:params) { {:create_opt_lsb_provider_name_dir=> true, :lsb_provider_name => 'UNSET' } }
+
+        it { should include_class('common') }
+
         it {
-          should include_class('common')
           should_not contain_file('/opt/UNSET')
         }
       end
@@ -56,8 +62,10 @@ describe 'common' do
       context 'create_opt_lsb_provider_name_dir => true and lsb_provider_name => foo' do
         let(:facts) { {:osfamily => 'RedHat' } }
         let(:params) { {:create_opt_lsb_provider_name_dir=> true, :lsb_provider_name => 'foo' } }
+
+        it { should include_class('common') }
+
         it {
-          should include_class('common')
           should contain_file('/opt/foo').with({
             'ensure' => 'directory',
             'owner'  => 'root',
