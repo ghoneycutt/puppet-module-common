@@ -360,3 +360,9 @@ Takes two arguments, a file name which can include the path, and the extension t
 
 Example: `strip_file_extension('myapp.war','war')` would return `myapp`.
 
+## is_true() ##
+Takes one arguments. Returns value if boolean or str2bool of value if string.
+Uses stdlib functions type and str2bool
+
+Example: `is_true('true')` would return true.
+
