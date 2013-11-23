@@ -95,6 +95,12 @@ Boolean to include ghoneycutt/network
 
 - *Default*: false
 
+enable_nscd
+--------------
+Boolean to include dantremblay/nscd
+
+- *Default*: false
+
 enable_nsswitch
 ---------------
 Boolean to include ghoneycutt/nsswitch

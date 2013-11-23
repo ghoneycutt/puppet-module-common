@@ -19,6 +19,7 @@ class common (
   $enable_mailaliases               = false,
   $enable_motd                      = false,
   $enable_network                   = false,
+  $enable_nscd                      = false,
   $enable_nsswitch                  = false,
   $enable_ntp                       = false,
   $enable_pam                       = false,
@@ -103,6 +104,17 @@ class common (
   }
   if $network_enabled == true {
     include network
+  }
+
+  # validate type and convert string to boolean if necessary
+  $enable_nscd_type = type($enable_nscd)
+  if $enable_nscd_type == 'string' {
+    $nscd_enabled = str2bool($enable_nscd)
+  } else {
+    $nscd_enabled = $enable_nscd
+  }
+  if $nscd_enabled == true {
+    include nscd
   }
 
   # validate type and convert string to boolean if necessary
@@ -269,7 +281,6 @@ class common (
       fail("Supported OS families are Debian, RedHat, Solaris, and Suse. Detected osfamily is ${::osfamily}.")
     }
   }
-
 
   # validate type and convert string to boolean if necessary
   $is_virtual_type = type($::is_virtual)
