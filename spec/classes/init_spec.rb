@@ -6,7 +6,7 @@ describe 'common' do
     context 'default options with supported OS' do
       let(:facts) { {:osfamily => 'RedHat' } }
       it {
-        should include_class('common')
+        should contain_class('common')
       }
     end
 
@@ -14,7 +14,7 @@ describe 'common' do
       let(:facts) { {:osfamily => 'Gentoo' } }
       it do
         expect {
-          should include_class('common')
+          should contain_class('common')
         }.to raise_error(Puppet::Error,/Supported OS families are Debian, RedHat, Solaris, and Suse. Detected osfamily is Gentoo./)
       end
     end
@@ -24,7 +24,7 @@ describe 'common' do
         let(:facts) { {:osfamily => 'RedHat' } }
         let(:params) { {:manage_root_password => true } }
 
-        it { should include_class('common') }
+        it { should contain_class('common') }
 
         it {
           should contain_user('root').with({
@@ -37,7 +37,7 @@ describe 'common' do
         let(:facts) { {:osfamily => 'RedHat' } }
         let(:params) { {:manage_root_password => true, :root_password => 'foo' } }
 
-        it { should include_class('common') }
+        it { should contain_class('common') }
 
         it {
           should contain_user('root').with({
@@ -52,7 +52,7 @@ describe 'common' do
         let(:facts) { {:osfamily => 'RedHat' } }
         let(:params) { {:create_opt_lsb_provider_name_dir=> true, :lsb_provider_name => 'UNSET' } }
 
-        it { should include_class('common') }
+        it { should contain_class('common') }
 
         it {
           should_not contain_file('/opt/UNSET')
@@ -63,7 +63,7 @@ describe 'common' do
         let(:facts) { {:osfamily => 'RedHat' } }
         let(:params) { {:create_opt_lsb_provider_name_dir=> true, :lsb_provider_name => 'foo' } }
 
-        it { should include_class('common') }
+        it { should contain_class('common') }
 
         it {
           should contain_file('/opt/foo').with({
