@@ -148,8 +148,12 @@ define common::mkuser (
   # create ~/.ssh
   case $my_manage_dotssh {
     true: {
+      $ensure_file = $ensure? {
+         'absent' => 'absent',
+         default  => 'directory'
+      }
       file { "${myhome}/.ssh":
-        ensure  => directory,
+        ensure  => $ensure_file,
         mode    => '0700',
         owner   => $name,
         group   => $name,
