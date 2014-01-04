@@ -18,6 +18,7 @@
 #   $groups            - additional groups the user should be associated with
 #   $password          - defaults to '!!'
 #   $mode              - mode of home directory, defaults to 0700
+#   $ssh_auth_key      - ssh key of the user
 #   $ssh_auth_key_type - defaults to 'ssh-dss'
 #
 # Actions: creates a user/group

@@ -251,6 +251,7 @@ common::users:
     uid: "30000"
     comment: "Garrett Honeycutt"
     groups: admin
+    ssh_auth_key: ssh-public-key
 </pre>
 
 `groups.yaml`
@@ -339,6 +340,12 @@ mode
 String - mode of home directory
 
 - *Default*: 0700
+
+ssh_auth_key
+-----------------
+String - The ssh key for the user
+
+- *Default*: undef
 
 ssh_auth_key_type
 -----------------
