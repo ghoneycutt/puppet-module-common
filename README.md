@@ -347,6 +347,12 @@ String - The ssh key for the user
 
 - *Default*: undef
 
+ssh_auth_key_ensure
+-----------------
+String - The ssh key Present or Absent
+
+- *Default*: present
+
 ssh_auth_key_type
 -----------------
 String - Anything that the ssh_authorized_key resource can take for the type attribute, such as `ssh-dss` or `ssh-rsa`.
