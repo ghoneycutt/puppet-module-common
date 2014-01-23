@@ -155,20 +155,6 @@ Boolean to include ghoneycutt/wget
 
 - *Default*: false
 
-### include classes based on `is_virtual` fact ###
-
-enable_virtual
------------
-Boolean to include ghoneycutt/virtual
-
-- *Default*: false
-
-enable_physical
------------
-Boolean to include ghoneycutt/physical
-
-- *Default*: false
-
 ### includes classes based on `osfamily` fact ###
 
 enable_debian

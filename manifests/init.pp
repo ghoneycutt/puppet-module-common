@@ -29,9 +29,6 @@ class common (
   $enable_utils                     = false,
   $enable_vim                       = false,
   $enable_wget                      = false,
-  # include classes based on virtual or physical
-  $enable_virtual                   = false,
-  $enable_physical                  = false,
   # include classes based on osfamily fact
   $enable_debian                    = false,
   $enable_redhat                    = false,
@@ -267,46 +264,6 @@ class common (
     }
     default: {
       fail("Supported OS families are Debian, RedHat, Solaris, and Suse. Detected osfamily is ${::osfamily}.")
-    }
-  }
-
-
-  # validate type and convert string to boolean if necessary
-  $is_virtual_type = type($::is_virtual)
-  if $is_virtual_type == 'string' {
-    $is_virtual = str2bool($::is_virtual)
-  } else {
-    $is_virtual = $::is_virtual
-  }
-
-  # include modules depending on if we are virtual or not
-  case $is_virtual {
-    true: {
-      # validate type and convert string to boolean if necessary
-      $enable_virtual_type = type($enable_virtual)
-      if $enable_virtual_type == 'string' {
-        $virtual_enabled = str2bool($enable_virtual)
-      } else {
-        $virtual_enabled = $enable_virtual
-      }
-      if $virtual_enabled == true {
-        include virtual
-      }
-    }
-    false: {
-      # validate type and convert string to boolean if necessary
-      $enable_physical_type = type($enable_physical)
-      if $enable_physical_type == 'string' {
-        $physical_enabled = str2bool($enable_physical)
-      } else {
-        $physical_enabled = $enable_physical
-      }
-      if $physical_enabled == true {
-        include physical
-      }
-    }
-    default: {
-      fail("is_virtual must be boolean true or false and is ${is_virtual}.")
     }
   }
 
