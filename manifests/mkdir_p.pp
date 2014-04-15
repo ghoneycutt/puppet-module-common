@@ -2,24 +2,26 @@
 #
 # Provide `mkdir -p` functionality for a directory
 #
-# Idea is to use this mkdir_p in conjunction with a file resource
+# Idea is to use this mkdirp in conjunction with a file resource
 #
 # Example usage:
 #
-#  common::mkdir_p { '/some/dir/structure': }
+#   mkdirp { 'example_dir':
+#     ensure  => present,
+#     path    => '/tmp/path/to/the/dir',
+#     owner   => 'root',
+#     group   => 'root',
+#     mode    => '0755',
+#     recurse => '2',
+#   } # the recurse param sets the permissions for n-parent folders
 #
-#  file { '/some/dir/structure':
-#    ensure  => directory,
-#    require => Common::Mkdir_p['/some/dir/structure'],
-#  }
+#   file { 'example_file':
+#     ensure  => 'present',
+#     path    => '/tmp/path/to/the/dir/filename',
+#     require => Mkdirp['example_dir'],
+#   }
+
+# a known bug:
+# if a value gets updated puppet will show this as "created"
 #
-define common::mkdir_p () {
-
-  validate_absolute_path($name)
-
-  exec { "mkdir_p-${name}":
-    command => "mkdir -p ${name}",
-    unless  => "test -d ${name}",
-    path    => '/bin:/usr/bin',
-  }
-}
+# Notice: /Stage[main]/Mkdirp/Mkdirp[example_dir]/ensure: created
