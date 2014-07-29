@@ -204,6 +204,20 @@ None.
 
 ===
 
+# common::remove_if_empty define #
+Removes a file if it exists and is empty.
+
+## Example usage: ##
+<pre>
+common::remove_if_empty { '/path/to/potentially_empty_file': }
+</pre>
+
+## Parameters for `common::remove_if_empty` define ##
+
+None.
+
+===
+
 # common::mkuser define #
 Ensures user/groups
 
