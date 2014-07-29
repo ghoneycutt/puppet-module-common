@@ -39,7 +39,7 @@
     }
   ],
   "name": "ghoneycutt-common",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "author": "ghoneycutt",
   "summary": "common module to be applied to all nodes",
   "license": "Apache License, Version 2.0",
