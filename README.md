@@ -198,7 +198,7 @@ file { '/some/dir/structure':
 }
 </pre>
 
-## Parameters for `common::mkdir` define ##
+## Parameters for `common::mkdir_p` define ##
 
 None.
 
