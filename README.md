@@ -198,7 +198,21 @@ file { '/some/dir/structure':
 }
 </pre>
 
-## Parameters for `common::mkdir` define ##
+## Parameters for `common::mkdir_p` define ##
+
+None.
+
+===
+
+# common::remove_if_empty define #
+Removes a file if it exists and is empty.
+
+## Example usage: ##
+<pre>
+common::remove_if_empty { '/path/to/potentially_empty_file': }
+</pre>
+
+## Parameters for `common::remove_if_empty` define ##
 
 None.
 
