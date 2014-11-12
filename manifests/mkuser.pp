@@ -153,7 +153,7 @@ define common::mkuser (
         ensure  => directory,
         mode    => '0700',
         owner   => $name,
-        group   => $name,
+        group   => $mygroup,
         require => User[$name],
       } # file
     } # 'ensure' or true
