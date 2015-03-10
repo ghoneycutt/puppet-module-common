@@ -37,8 +37,7 @@ class common (
 ) {
 
   # validate type and convert string to boolean if necessary
-  $enable_dnsclient_type = type($enable_dnsclient)
-  if $enable_dnsclient_type == 'string' {
+  if is_string($enable_dnsclient) {
     $dnsclient_enabled = str2bool($enable_dnsclient)
   } else {
     $dnsclient_enabled = $enable_dnsclient
@@ -48,8 +47,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_hosts_type = type($enable_hosts)
-  if $enable_hosts_type == 'string' {
+  if is_string($enable_hosts) {
     $hosts_enabled = str2bool($enable_hosts)
   } else {
     $hosts_enabled = $enable_hosts
@@ -59,8 +57,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_inittab_type = type($enable_inittab)
-  if $enable_inittab_type == 'string' {
+  if is_string($enable_inittab) {
     $inittab_enabled = str2bool($enable_inittab)
   } else {
     $inittab_enabled = $enable_inittab
@@ -70,8 +67,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_mailaliases_type = type($enable_mailaliases)
-  if $enable_mailaliases_type == 'string' {
+  if is_string($enable_mailaliases) {
     $mailaliases_enabled = str2bool($enable_mailaliases)
   } else {
     $mailaliases_enabled = $enable_mailaliases
@@ -81,8 +77,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_motd_type = type($enable_motd)
-  if $enable_motd_type == 'string' {
+  if is_string($enable_mailaliases) {
     $motd_enabled = str2bool($enable_motd)
   } else {
     $motd_enabled = $enable_motd
@@ -92,8 +87,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_network_type = type($enable_network)
-  if $enable_network_type == 'string' {
+  if is_string($enable_network) {
     $network_enabled = str2bool($enable_network)
   } else {
     $network_enabled = $enable_network
@@ -103,8 +97,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_nsswitch_type = type($enable_nsswitch)
-  if $enable_nsswitch_type == 'string' {
+  if is_string($enable_nsswitch) {
     $nsswitch_enabled = str2bool($enable_nsswitch)
   } else {
     $nsswitch_enabled = $enable_nsswitch
@@ -114,8 +107,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_ntp_type = type($enable_ntp)
-  if $enable_ntp_type == 'string' {
+  if is_string($enable_ntp) {
     $ntp_enabled = str2bool($enable_ntp)
   } else {
     $ntp_enabled = $enable_ntp
@@ -125,8 +117,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_pam_type = type($enable_pam)
-  if $enable_pam_type == 'string' {
+  if is_string($enable_pam) {
     $pam_enabled = str2bool($enable_pam)
   } else {
     $pam_enabled = $enable_pam
@@ -136,8 +127,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_puppet_agent_type = type($enable_puppet_agent)
-  if $enable_puppet_agent_type == 'string' {
+  if is_string($enable_puppet_agent) {
     $puppet_agent_enabled = str2bool($enable_puppet_agent)
   } else {
     $puppet_agent_enabled = $enable_puppet_agent
@@ -147,8 +137,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_rsyslog_type = type($enable_rsyslog)
-  if $enable_rsyslog_type == 'string' {
+  if is_string($enable_rsyslog) {
     $rsyslog_enabled = str2bool($enable_rsyslog)
   } else {
     $rsyslog_enabled = $enable_rsyslog
@@ -158,8 +147,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_selinux_type = type($enable_selinux)
-  if $enable_selinux_type == 'string' {
+  if is_string($enable_selinux) {
     $selinux_enabled = str2bool($enable_selinux)
   } else {
     $selinux_enabled = $enable_selinux
@@ -169,8 +157,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_ssh_type = type($enable_ssh)
-  if $enable_ssh_type == 'string' {
+  if is_string($enable_ssh) {
     $ssh_enabled = str2bool($enable_ssh)
   } else {
     $ssh_enabled = $enable_ssh
@@ -180,8 +167,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_utils_type = type($enable_utils)
-  if $enable_utils_type == 'string' {
+  if is_string($enable_utils) {
     $utils_enabled = str2bool($enable_utils)
   } else {
     $utils_enabled = $enable_utils
@@ -191,8 +177,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_vim_type = type($enable_vim)
-  if $enable_vim_type == 'string' {
+  if is_string($enable_vim) {
     $vim_enabled = str2bool($enable_vim)
   } else {
     $vim_enabled = $enable_vim
@@ -202,8 +187,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $enable_wget_type = type($enable_wget)
-  if $enable_wget_type == 'string' {
+  if is_string($enable_wget) {
     $wget_enabled = str2bool($enable_wget)
   } else {
     $wget_enabled = $enable_wget
@@ -216,8 +200,7 @@ class common (
   case $::osfamily {
     'debian': {
       # validate type and convert string to boolean if necessary
-      $enable_debian_type = type($enable_debian)
-      if $enable_debian_type == 'string' {
+      if is_string($enable_debian) {
         $debian_enabled = str2bool($enable_debian)
       } else {
         $debian_enabled = $enable_debian
@@ -228,8 +211,7 @@ class common (
     }
     'redhat': {
       # validate type and convert string to boolean if necessary
-      $enable_redhat_type = type($enable_redhat)
-      if $enable_redhat_type == 'string' {
+      if is_string($enable_redhat) {
         $redhat_enabled = str2bool($enable_redhat)
       } else {
         $redhat_enabled = $enable_redhat
@@ -240,8 +222,7 @@ class common (
     }
     'solaris': {
       # validate type and convert string to boolean if necessary
-      $enable_solaris_type = type($enable_solaris)
-      if $enable_solaris_type == 'string' {
+      if is_string($enable_solaris) {
         $solaris_enabled = str2bool($enable_solaris)
       } else {
         $solaris_enabled = $enable_solaris
@@ -252,8 +233,7 @@ class common (
     }
     'suse': {
       # validate type and convert string to boolean if necessary
-      $enable_suse_type = type($enable_suse)
-      if $enable_suse_type == 'string' {
+      if is_string($enable_suse) {
         $suse_enabled = str2bool($enable_suse)
       } else {
         $suse_enabled = $enable_suse
@@ -268,8 +248,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $manage_root_password_type = type($manage_root_password)
-  if $manage_root_password_type == 'string' {
+  if is_string($manage_root_password) {
     $manage_root_password_real = str2bool($manage_root_password)
   } else {
     $manage_root_password_real = $manage_root_password
@@ -278,8 +257,7 @@ class common (
   if $manage_root_password_real == true {
 
     # validate root_password - fail if not a string
-    $root_password_type = type($root_password)
-    if $root_password_type != 'string' {
+    if !is_string($root_password) {
       fail('common::root_password is not a string.')
     }
 
@@ -289,8 +267,7 @@ class common (
   }
 
   # validate type and convert string to boolean if necessary
-  $create_opt_lsb_provider_name_dir_type = type($create_opt_lsb_provider_name_dir)
-  if $create_opt_lsb_provider_name_dir_type == 'string' {
+  if is_string($create_opt_lsb_provider_name_dir) {
     $create_opt_lsb_provider_name_dir_real = str2bool($create_opt_lsb_provider_name_dir)
   } else {
     $create_opt_lsb_provider_name_dir_real = $create_opt_lsb_provider_name_dir
@@ -299,8 +276,7 @@ class common (
   if $create_opt_lsb_provider_name_dir_real == true {
 
     # validate lsb_provider_name - fail if not a string
-    $lsb_provider_name_type = type($lsb_provider_name)
-    if $lsb_provider_name_type != 'string' {
+    if !is_string($lsb_provider_name) {
       fail('common::lsb_provider_name is not a string.')
     }
 
