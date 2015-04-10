@@ -138,7 +138,7 @@ define common::mkuser (
   } elsif is_string($manage_dotssh) {
     $my_manage_dotssh = str2bool($manage_dotssh)
   } else {
-    fail("${name}::manage_dotssh is type <${manage_dotssh_type}> and must be boolean or string.")
+    fail("${name}::manage_dotssh must be boolean or string.")
   }
 
   # create ~/.ssh
