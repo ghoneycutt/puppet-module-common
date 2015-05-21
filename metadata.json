@@ -3,6 +3,7 @@
   "version": "1.2.1",
   "author": "ghoneycutt",
   "summary": "common module to be applied to all nodes",
+  "description": "Provide ability to include modules that are common to all nodes.",
   "license": "Apache-2.0",
   "source": "git://github.com/ghoneycutt/puppet-module-common.git",
   "project_page": "https://github.com/ghoneycutt/puppet-module-common",
@@ -10,11 +11,11 @@
   "requirements": [
     {
       "name": "pe",
-      "version_requirement": ">= 3.2.0 < 4.0.0"
+      "version_requirement": ">= 3.2.0 < 5.0.0"
     },
     {
       "name": "puppet",
-      "version_requirement": ">= 3.0.0 < 4.0.0"
+      "version_requirement": ">= 3.0.0 < 5.0.0"
     }
   ],
   "operatingsystem_support": [
@@ -46,8 +47,7 @@
       "operatingsystem": "Ubuntu"
     }
   ],
-  "description": "Provide ability to include modules that are common to all nodes.",
   "dependencies": [
-    {"name":"puppetlabs/stdlib","version_requirement":">= 4.2.0 < 5.0.0"}
+    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.0.0"}
   ]
 }

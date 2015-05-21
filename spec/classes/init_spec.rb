@@ -14,7 +14,7 @@ describe 'common' do
       it do
         expect {
           should contain_class('common')
-        }.to raise_error(Puppet::Error,/Supported OS families are Debian, RedHat, Solaris, and Suse. Detected osfamily is Gentoo./)
+        }.to raise_error(Puppet::Error,/Supported OS families are Debian, RedHat, Solaris, and Suse\. Detected osfamily is Gentoo\./)
       end
     end
 
