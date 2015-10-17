@@ -6,20 +6,21 @@
 # contact@garretthoneycutt.com - Licensed GPLv2
 #
 # Parameters:
-#   $uid               - UID of user
-#   $gid               - GID of user, defaults to UID
-#   $group             - group name of user, defaults to username
-#   $shell             - user's shell, defaults to '/bin/bash'
-#   $home              - home directory, defaults to /home/<username>
-#   $ensure            - present by default
-#   $managehome        - true by default
-#   $manage_dotssh     - true by default. creates ~/.ssh
-#   $comment           - comment field for passwd
-#   $groups            - additional groups the user should be associated with
-#   $password          - defaults to '!!'
-#   $mode              - mode of home directory, defaults to 0700
-#   $ssh_auth_key      - ssh key of the user
-#   $ssh_auth_key_type - defaults to 'ssh-dss'
+#   $uid                 - UID of user
+#   $gid                 - GID of user, defaults to UID
+#   $group               - group name of user, defaults to username
+#   $shell               - user's shell, defaults to '/bin/bash'
+#   $home                - home directory, defaults to /home/<username>
+#   $ensure              - present by default
+#   $managehome          - true by default
+#   $manage_dotssh       - true by default. creates ~/.ssh
+#   $comment             - comment field for passwd
+#   $groups              - additional groups the user should be associated with
+#   $password            - defaults to '!!'
+#   $mode                - mode of home directory, defaults to 0700
+#   $ssh_auth_key        - ssh key of the user
+#   $ssh_auth_key_ensure - ssh key present by default
+#   $ssh_auth_key_type   - defaults to 'ssh-dss'
 #
 # Actions: creates a user/group
 #
@@ -38,20 +39,21 @@
 #
 define common::mkuser (
   $uid,
-  $gid               = undef,
-  $group             = undef,
-  $shell             = undef,
-  $home              = undef,
-  $ensure            = 'present',
-  $managehome        = true,
-  $manage_dotssh     = true,
-  $comment           = 'created via puppet',
-  $groups            = undef,
-  $password          = undef,
-  $mode              = undef,
-  $ssh_auth_key      = undef,
-  $create_group      = true,
-  $ssh_auth_key_type = undef,
+  $gid                 = undef,
+  $group               = undef,
+  $shell               = undef,
+  $home                = undef,
+  $ensure              = 'present',
+  $managehome          = true,
+  $manage_dotssh       = true,
+  $comment             = 'created via puppet',
+  $groups              = undef,
+  $password            = undef,
+  $mode                = undef,
+  $create_group        = true,
+  $ssh_auth_key        = undef,
+  $ssh_auth_key_ensure = 'present',
+  $ssh_auth_key_type   = undef,
 ) {
 
   if $shell {
@@ -170,7 +172,7 @@ define common::mkuser (
   # if we specify a key, then it should be present
   if $ssh_auth_key {
     ssh_authorized_key { $name:
-      ensure  => present,
+      ensure  => $ssh_auth_key_ensure,
       user    => $name,
       key     => $ssh_auth_key,
       type    => $my_ssh_auth_key_type,
