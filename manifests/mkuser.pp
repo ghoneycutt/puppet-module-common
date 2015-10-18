@@ -52,6 +52,7 @@ define common::mkuser (
   $ssh_auth_key      = undef,
   $create_group      = true,
   $ssh_auth_key_type = undef,
+  $purge_ssh_key     = undef,
 ) {
 
   if $shell {
@@ -102,17 +103,25 @@ define common::mkuser (
     $mymode = '0700'
   }
 
+  if $purge_ssh_key != undef {
+    $mypurgekey = str2bool($purge_ssh_key)
+    validate_bool($mypurgekey)
+  } else {
+    $mypurgekey = false
+  }
+
   # create user
   user { $name:
-    ensure     => $ensure,
-    uid        => $uid,
-    gid        => $mygid,
-    shell      => $myshell,
-    groups     => $mygroups,
-    password   => $mypassword,
-    managehome => $managehome,
-    home       => $myhome,
-    comment    => $comment,
+    ensure         => $ensure,
+    uid            => $uid,
+    gid            => $mygid,
+    shell          => $myshell,
+    groups         => $mygroups,
+    password       => $mypassword,
+    managehome     => $managehome,
+    home           => $myhome,
+    comment        => $comment,
+    purge_ssh_keys => $mypurgekey,
   } # user
 
   if $create_group {
