@@ -353,6 +353,12 @@ String - Anything that the ssh_authorized_key resource can take for the type att
 
 - *Default*: 'ssh-dss'
 
+purge_ssh_keys
+-----------------
+Boolean - Purge any keys that aren’t managed as ssh_authorized_key resources.
+
+- *Default*: false
+
 ===
 
 # Functions #
