@@ -15,15 +15,16 @@ describe 'common' do
 
     it {
       should contain_user('alice').with({
-        'uid'        => '1000',
-        'gid'        => '1000',
-        'shell'      => '/bin/bash',
-        'home'       => '/home/alice',
-        'ensure'     => 'present',
-        'groups'     => 'alice',
-        'password'   => '!!',
-        'managehome' => 'true',
-        'comment'    => 'created via puppet',
+        'uid'            => '1000',
+        'gid'            => '1000',
+        'shell'          => '/bin/bash',
+        'home'           => '/home/alice',
+        'ensure'         => 'present',
+        'groups'         => 'alice',
+        'password'       => '!!',
+        'managehome'     => 'true',
+        'comment'        => 'created via puppet',
+        'purge_ssh_keys' => 'false',
       })
     }
 
@@ -59,15 +60,16 @@ describe 'common' do
     let(:params) do
       { :users =>  {
           'myuser' => {
-            'uid'      => 2000,
-            'group'    => 'superusers',
-            'gid'      => 2000,
-            'shell'    => '/bin/zsh',
-            'home'     => '/home/superu',
-            'groups'   => ['superusers', 'development', 'admins'],
-            'password' => 'puppet',
-            'mode'     => '0701',
-            'comment'  => 'a puppet master',
+            'uid'            => 2000,
+            'group'          => 'superusers',
+            'gid'            => 2000,
+            'shell'          => '/bin/zsh',
+            'home'           => '/home/superu',
+            'groups'         => ['superusers', 'development', 'admins'],
+            'password'       => 'puppet',
+            'mode'           => '0701',
+            'comment'        => 'a puppet master',
+            'purge_ssh_keys' => 'true',
           }
         }
       }
@@ -75,13 +77,15 @@ describe 'common' do
 
     it {
       should contain_user('myuser').with({
-        'uid'      => '2000',
-        'gid'      => '2000',
-        'shell'    => '/bin/zsh',
-        'home'     => '/home/superu',
-        'groups'   => ['superusers', 'development', 'admins'],
-        'password' => 'puppet',
-        'comment'  => 'a puppet master',
+        'uid'            => '2000',
+        'gid'            => '2000',
+        'shell'          => '/bin/zsh',
+        'home'           => '/home/superu',
+        'groups'         => ['superusers', 'development', 'admins'],
+        'password'       => 'puppet',
+        'comment'        => 'a puppet master',
+        'purge_ssh_keys' => 'true',
+
       })
     }
 
@@ -120,29 +124,31 @@ describe 'common' do
 
     it {
       should contain_user('alice').with({
-        'uid'        => 1000,
-        'gid'        => 1000,
-        'shell'      => '/bin/bash',
-        'home'       => '/home/alice',
-        'ensure'     => 'present',
-        'managehome' => true,
-        'groups'     => 'alice',
-        'password'   => '!!',
-        'comment'    => 'created via puppet',
+        'uid'            => 1000,
+        'gid'            => 1000,
+        'shell'          => '/bin/bash',
+        'home'           => '/home/alice',
+        'ensure'         => 'present',
+        'managehome'     => true,
+        'groups'         => 'alice',
+        'password'       => '!!',
+        'comment'        => 'created via puppet',
+        'purge_ssh_keys' => 'false',
       })
     }
 
     it {
       should contain_user('bob').with({
-        'uid'        => 1001,
-        'gid'        => 1001,
-        'shell'      => '/bin/bash',
-        'home'       => '/home/bob',
-        'ensure'     => 'present',
-        'managehome' => true,
-        'groups'     => 'bob',
-        'password'   => '!!',
-        'comment'    => 'created via puppet',
+        'uid'            => 1001,
+        'gid'            => 1001,
+        'shell'          => '/bin/bash',
+        'home'           => '/home/bob',
+        'ensure'         => 'present',
+        'managehome'     => true,
+        'groups'         => 'bob',
+        'password'       => '!!',
+        'comment'        => 'created via puppet',
+        'purge_ssh_keys' => 'false',
       })
     }
 
