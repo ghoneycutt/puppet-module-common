@@ -52,7 +52,7 @@ define common::mkuser (
   $ssh_auth_key      = undef,
   $create_group      = true,
   $ssh_auth_key_type = undef,
-  $purge_ssh_key     = undef,
+  $purge_ssh_keys    = undef,
 ) {
 
   if $shell {
@@ -103,8 +103,8 @@ define common::mkuser (
     $mymode = '0700'
   }
 
-  if $purge_ssh_key != undef {
-    $mypurgekey = str2bool($purge_ssh_key)
+  if $purge_ssh_keys != undef {
+    $mypurgekey = str2bool($purge_ssh_keys)
     validate_bool($mypurgekey)
   } else {
     $mypurgekey = false
