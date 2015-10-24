@@ -110,18 +110,23 @@ define common::mkuser (
     $mypurgekey = false
   }
 
+  if versioncmp($::puppetversion, '3.6') > 0 {
+    User {
+      purge_ssh_keys => $mypurgekey,
+    }
+  }
+
   # create user
   user { $name:
-    ensure         => $ensure,
-    uid            => $uid,
-    gid            => $mygid,
-    shell          => $myshell,
-    groups         => $mygroups,
-    password       => $mypassword,
-    managehome     => $managehome,
-    home           => $myhome,
-    comment        => $comment,
-    purge_ssh_keys => $mypurgekey,
+    ensure     => $ensure,
+    uid        => $uid,
+    gid        => $mygid,
+    shell      => $myshell,
+    groups     => $mygroups,
+    password   => $mypassword,
+    managehome => $managehome,
+    home       => $myhome,
+    comment    => $comment,
   } # user
 
   if $create_group {
