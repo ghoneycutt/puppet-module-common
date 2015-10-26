@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe 'common' do
-
   context 'one user with default values' do
     let(:facts) { { :osfamily => 'RedHat' } }
     let(:params) do
@@ -282,5 +281,52 @@ describe 'common' do
         })
       }
     end
+  end
+
+  # purge_ssh_keys was introduced with Puppet 3.6.0
+  # we need to know which version of Puppet is running this test
+  # to decide which results we need to expect
+  # dirty trick to get the running version of Puppet:
+  clientversion = `facter puppetversion`
+  # test environments contains no facts, we need to set it as fact
+
+  describe "with purge_ssh_keys running on Puppet version #{clientversion}" do
+    let(:facts) do
+      {
+        :osfamily      => 'RedHat',
+        :puppetversion => clientversion,
+      }
+    end
+
+    context 'set to undef/nil' do
+      let(:params) { { :users => { 'alice' => { 'uid' => 1000 } } } }
+
+      if clientversion.to_f >= 3.6
+        it { should contain_user('alice').with_purge_ssh_keys(false) }
+      else
+        it { should contain_user('alice').without_purge_ssh_keys }
+      end
+    end
+
+    context 'set to true' do
+      let(:params) { { :users => { 'alice' => { 'uid' => 1000, 'purge_ssh_keys'  => true } } } }
+
+      if clientversion.to_f >= 3.6
+        it { should contain_user('alice').with_purge_ssh_keys(true) }
+      else
+        it { should contain_user('alice').without_purge_ssh_keys }
+      end
+    end
+
+    context 'set to false' do
+      let(:params) { { :users => { 'alice' => { 'uid' => 1000, 'purge_ssh_keys'  => false } } } }
+
+      if clientversion.to_f >= 3.6
+        it { should contain_user('alice').with_purge_ssh_keys(false) }
+      else
+        it { should contain_user('alice').without_purge_ssh_keys }
+      end
+    end
+
   end
 end
