@@ -53,6 +53,7 @@ define common::mkuser (
   $create_group      = true,
   $ssh_auth_key_type = undef,
   $purge_ssh_keys    = undef,
+  $old_puppetmaster  = false,
 ) {
 
   if $shell {
@@ -110,9 +111,18 @@ define common::mkuser (
     $mypurgekey = false
   }
 
-  if versioncmp($::puppetversion, '3.6') > 0 {
-    User {
-      purge_ssh_keys => $mypurgekey,
+  # validate type and convert string to boolean if necessary
+  if is_string($old_puppetmaster) {
+    $old_puppetmaster_real = str2bool($old_puppetmaster)
+  } else {
+    $old_puppetmaster_real = $old_puppetmaster
+  }
+
+  if $old_puppetmaster_real == false {
+    if versioncmp($::puppetversion, '3.6') > 0 {
+      User {
+        purge_ssh_keys => $mypurgekey,
+      }
     }
   }
 

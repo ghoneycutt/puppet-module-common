@@ -1,8 +1,22 @@
 require 'spec_helper'
 
 describe 'common' do
+
+  # purge_ssh_keys was introduced with Puppet 3.6.0
+  # we need to know which version of Puppet is running this test
+  # to decide which results we need to expect
+  # dirty trick to get the running version of Puppet:
+  clientversion = `facter puppetversion`
+  # test environments contains no facts, we need to set it as fact
+
+  let(:facts) do
+    {
+      :osfamily      => 'RedHat',
+      :puppetversion => clientversion,
+    }
+  end
+
   context 'one user with default values' do
-    let(:facts) { { :osfamily => 'RedHat' } }
     let(:params) do
       { :users => {
           'alice' => {
@@ -54,7 +68,6 @@ describe 'common' do
   end
 
   context 'one user with custom values' do
-    let(:facts) { { :osfamily => 'RedHat' } }
     let(:params) do
       { :users =>  {
           'myuser' => {
@@ -104,7 +117,6 @@ describe 'common' do
   end
 
   context 'two users with default values' do
-    let(:facts) { { :osfamily => 'RedHat' } }
     let(:params) do
       { :users => {
          'alice' => {
@@ -199,7 +211,6 @@ describe 'common' do
   end
 
   context 'do not manage home' do
-    let(:facts) { { :osfamily => 'RedHat' } }
     let(:params) do
       { :users => {
           'alice' => {
@@ -216,7 +227,6 @@ describe 'common' do
   end
 
   context 'do not manage dotssh' do
-    let(:facts) { { :osfamily => 'RedHat' } }
     let(:params) do
       { :users => {
         'alice' => {
@@ -234,7 +244,6 @@ describe 'common' do
 
   describe 'with ssh_auth_key parameter specified' do
     context 'with defaults for ssh_auth_key_type parameter' do
-      let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
         {
           :users => {
@@ -258,7 +267,6 @@ describe 'common' do
     end
 
     context 'with ssh_auth_key_type parameter specified' do
-      let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
         {
           :users => {
@@ -283,21 +291,7 @@ describe 'common' do
     end
   end
 
-  # purge_ssh_keys was introduced with Puppet 3.6.0
-  # we need to know which version of Puppet is running this test
-  # to decide which results we need to expect
-  # dirty trick to get the running version of Puppet:
-  clientversion = `facter puppetversion`
-  # test environments contains no facts, we need to set it as fact
-
   describe "with purge_ssh_keys running on Puppet version #{clientversion}" do
-    let(:facts) do
-      {
-        :osfamily      => 'RedHat',
-        :puppetversion => clientversion,
-      }
-    end
-
     context 'set to undef/nil' do
       let(:params) { { :users => { 'alice' => { 'uid' => 1000 } } } }
 
@@ -327,6 +321,16 @@ describe 'common' do
         it { should contain_user('alice').without_purge_ssh_keys }
       end
     end
+  end
 
+  [true,'true'].each do |value|
+    describe "with purge_ssh_keys set to true and users_old_puppetmaster set to true (as #{value.class})" do
+      let(:params) { {
+        :users                  => { 'alice' => { 'uid' => 1000, 'purge_ssh_keys'  => true } },
+        :users_old_puppetmaster => value,
+      } }
+
+      it { should contain_user('alice').without_purge_ssh_keys }
+    end
   end
 end
