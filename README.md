@@ -181,6 +181,17 @@ Boolean to include ghoneycutt/suse
 
 - *Default*: false
 
+users_old_puppetmaster
+----------------------
+Boolean to trigger if purge_ssh_keys attribute should be used for user resources created by $users.
+purge_ssh_keys was introduced with Puppet 3.6.0. If your Puppetmaster is older than 3.6.0 it doesn't support that attribute.
+This module is only able to trigger usage of this attribute based on the Puppet client version.
+
+This is purely made to save the lost souls which do use newer Puppet clients than Puppetmasters.
+https://docs.puppetlabs.com/guides/install_puppet/upgrading.html#always-upgrade-the-puppet-master-first
+
+- *Default*: false
+
 ===
 
 # common::mkdir_p define #
@@ -342,7 +353,7 @@ String - mode of home directory
 - *Default*: 0700
 
 ssh_auth_key
------------------
+------------
 String - The ssh key for the user
 
 - *Default*: undef
@@ -354,10 +365,20 @@ String - Anything that the ssh_authorized_key resource can take for the type att
 - *Default*: 'ssh-dss'
 
 purge_ssh_keys
------------------
+--------------
 Boolean - Purge any keys that aren’t managed as ssh_authorized_key resources. As this parameter was introduced with Puppet 3.6,
-it will only work with Puppet >= 3.6. On earlier version this parameter will be silently ignored.
+it will only work with Puppet clients & servers >= 3.6. On earlier version this parameter will be silently ignored.
 
+- *Default*: false
+
+old_puppetmaster
+----------------
+Boolean to trigger if purge_ssh_keys attribute should be used for user resources created by $users.
+purge_ssh_keys was introduced with Puppet 3.6.0. If your Puppetmaster is older than 3.6.0 it doesn't support that attribute.
+This module is only able to trigger usage of this attribute based on the Puppet client version.
+
+This is purely made to save the lost souls which do use newer Puppet clients than Puppetmasters.
+https://docs.puppetlabs.com/guides/install_puppet/upgrading.html#always-upgrade-the-puppet-master-first
 
 - *Default*: false
 

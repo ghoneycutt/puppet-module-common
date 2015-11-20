@@ -34,6 +34,7 @@ class common (
   $enable_redhat                    = false,
   $enable_solaris                   = false,
   $enable_suse                      = false,
+  $users_old_puppetmaster           = false,
 ) {
 
   # validate type and convert string to boolean if necessary
@@ -292,10 +293,24 @@ class common (
     }
   }
 
+  # validate type and convert string to boolean if necessary
+  if is_string($users_old_puppetmaster) {
+    $users_old_puppetmaster_real = str2bool($users_old_puppetmaster)
+  } else {
+    $users_old_puppetmaster_real = $users_old_puppetmaster
+  }
+
   if $users != undef {
+    if $users_old_puppetmaster_real == true {
+      $default_options = {
+        'old_puppetmaster' => true,
+      }
+    } else {
+      $default_options = {}
+    }
 
     # Create virtual user resources
-    create_resources('@common::mkuser',$common::users)
+    create_resources('@common::mkuser',$common::users, $default_options)
 
     # Collect all virtual users
     Common::Mkuser <||>
