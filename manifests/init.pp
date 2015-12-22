@@ -43,7 +43,7 @@ class common (
     $dnsclient_enabled = $enable_dnsclient
   }
   if $dnsclient_enabled == true {
-    include dnsclient
+    include ::dnsclient
   }
 
   # validate type and convert string to boolean if necessary
@@ -53,7 +53,7 @@ class common (
     $hosts_enabled = $enable_hosts
   }
   if $hosts_enabled == true {
-    include hosts
+    include ::hosts
   }
 
   # validate type and convert string to boolean if necessary
@@ -63,7 +63,7 @@ class common (
     $inittab_enabled = $enable_inittab
   }
   if $inittab_enabled == true {
-    include inittab
+    include ::inittab
   }
 
   # validate type and convert string to boolean if necessary
@@ -73,7 +73,7 @@ class common (
     $mailaliases_enabled = $enable_mailaliases
   }
   if $mailaliases_enabled == true {
-    include mailaliases
+    include ::mailaliases
   }
 
   # validate type and convert string to boolean if necessary
@@ -83,7 +83,7 @@ class common (
     $motd_enabled = $enable_motd
   }
   if $motd_enabled == true {
-    include motd
+    include ::motd
   }
 
   # validate type and convert string to boolean if necessary
@@ -93,7 +93,7 @@ class common (
     $network_enabled = $enable_network
   }
   if $network_enabled == true {
-    include network
+    include ::network
   }
 
   # validate type and convert string to boolean if necessary
@@ -103,7 +103,7 @@ class common (
     $nsswitch_enabled = $enable_nsswitch
   }
   if $nsswitch_enabled == true {
-    include nsswitch
+    include ::nsswitch
   }
 
   # validate type and convert string to boolean if necessary
@@ -113,7 +113,7 @@ class common (
     $ntp_enabled = $enable_ntp
   }
   if $ntp_enabled == true {
-    include ntp
+    include ::ntp
   }
 
   # validate type and convert string to boolean if necessary
@@ -123,7 +123,7 @@ class common (
     $pam_enabled = $enable_pam
   }
   if $pam_enabled == true {
-    include pam
+    include ::pam
   }
 
   # validate type and convert string to boolean if necessary
@@ -133,7 +133,7 @@ class common (
     $puppet_agent_enabled = $enable_puppet_agent
   }
   if $puppet_agent_enabled == true {
-    include puppet::agent
+    include ::puppet::agent
   }
 
   # validate type and convert string to boolean if necessary
@@ -143,7 +143,7 @@ class common (
     $rsyslog_enabled = $enable_rsyslog
   }
   if $rsyslog_enabled == true {
-    include rsyslog
+    include ::rsyslog
   }
 
   # validate type and convert string to boolean if necessary
@@ -153,7 +153,7 @@ class common (
     $selinux_enabled = $enable_selinux
   }
   if $selinux_enabled == true {
-    include selinux
+    include ::selinux
   }
 
   # validate type and convert string to boolean if necessary
@@ -163,7 +163,7 @@ class common (
     $ssh_enabled = $enable_ssh
   }
   if $ssh_enabled == true {
-    include ssh
+    include ::ssh
   }
 
   # validate type and convert string to boolean if necessary
@@ -173,7 +173,7 @@ class common (
     $utils_enabled = $enable_utils
   }
   if $utils_enabled == true {
-    include utils
+    include ::utils
   }
 
   # validate type and convert string to boolean if necessary
@@ -183,7 +183,7 @@ class common (
     $vim_enabled = $enable_vim
   }
   if $vim_enabled == true {
-    include vim
+    include ::vim
   }
 
   # validate type and convert string to boolean if necessary
@@ -193,7 +193,7 @@ class common (
     $wget_enabled = $enable_wget
   }
   if $wget_enabled == true {
-    include wget
+    include ::wget
   }
 
   # only allow supported OS's
@@ -206,7 +206,7 @@ class common (
         $debian_enabled = $enable_debian
       }
       if $debian_enabled == true {
-        include debian
+        include ::debian
       }
     }
     'redhat': {
@@ -217,7 +217,7 @@ class common (
         $redhat_enabled = $enable_redhat
       }
       if $redhat_enabled == true {
-        include redhat
+        include ::redhat
       }
     }
     'solaris': {
@@ -228,7 +228,7 @@ class common (
         $solaris_enabled = $enable_solaris
       }
       if $solaris_enabled == true {
-        include solaris
+        include ::solaris
       }
     }
     'suse': {
@@ -239,7 +239,7 @@ class common (
         $suse_enabled = $enable_suse
       }
       if $suse_enabled == true {
-        include suse
+        include ::suse
       }
     }
     default: {
@@ -298,7 +298,7 @@ class common (
     create_resources('@common::mkuser',$common::users)
 
     # Collect all virtual users
-    Common::Mkuser <||>
+    Common::Mkuser <||> # lint:ignore:spaceship_operator_without_tag
   }
 
   if $groups != undef {
@@ -307,6 +307,6 @@ class common (
     create_resources('@group',$common::groups)
 
     # Collect all virtual groups
-    Group <||>
+    Group <||> # lint:ignore:spaceship_operator_without_tag
   }
 }

@@ -156,23 +156,15 @@ define common::mkuser (
   }
 
   # create ~/.ssh
-  case $my_manage_dotssh {
-    true: {
-      file { "${myhome}/.ssh":
-        ensure  => directory,
-        mode    => '0700',
-        owner   => $name,
-        group   => $name,
-        require => User[$name],
-      } # file
-    } # 'ensure' or true
-    false: {
-      # noop
+  if $my_manage_dotssh == true {
+    file { "${myhome}/.ssh":
+      ensure  => directory,
+      mode    => '0700',
+      owner   => $name,
+      group   => $name,
+      require => User[$name],
     }
-    default: {
-      fail("${name}::manage_dotssh is <${manage_dotssh}> and must be true or false")
-    }
-  } # case
+  }
 
   # if ssh_auth_key_type is unspecified, use ssh-dss
   if $ssh_auth_key_type {
