@@ -116,6 +116,15 @@ define common::mkuser (
     }
   }
 
+  # ensure managehome is boolean
+  if is_bool($managehome){
+    $my_managehome = $managehome
+  } elsif is_string($managehome) {
+    $my_managehome = str2bool($managehome)
+  } else {
+    fail("${name}::managehome must be boolean or string.")
+  }
+
   # create user
   user { $name:
     ensure     => $ensure,
@@ -124,7 +133,7 @@ define common::mkuser (
     shell      => $myshell,
     groups     => $mygroups,
     password   => $mypassword,
-    managehome => $managehome,
+    managehome => $my_managehome,
     home       => $myhome,
     comment    => $comment,
   } # user
@@ -139,7 +148,7 @@ define common::mkuser (
 
   # If managing home, then set the mode of the home directory. This allows for
   # modes other than 0700 for $HOME.
-  if $managehome == true {
+  if $my_managehome == true {
 
     common::mkdir_p { $myhome: }
 
