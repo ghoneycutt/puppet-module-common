@@ -116,6 +116,15 @@ define common::mkuser (
     }
   }
 
+  # ensure managehome is boolean
+  if is_bool($managehome){
+    $my_managehome = $managehome
+  } elsif is_string($managehome) {
+    $my_managehome = str2bool($managehome)
+  } else {
+    fail("${name}::managehome must be boolean or string.")
+  }
+
   # create user
   user { $name:
     ensure     => $ensure,
@@ -124,7 +133,7 @@ define common::mkuser (
     shell      => $myshell,
     groups     => $mygroups,
     password   => $mypassword,
-    managehome => $managehome,
+    managehome => $my_managehome,
     home       => $myhome,
     comment    => $comment,
   } # user
@@ -139,30 +148,34 @@ define common::mkuser (
 
   # If managing home, then set the mode of the home directory. This allows for
   # modes other than 0700 for $HOME.
-  if $managehome == true {
+  if $my_managehome == true {
+
+    common::mkdir_p { $myhome: }
+
     file { $myhome:
-      owner => $name,
-      mode  => $mymode,
-    }
-  }
-
-  # ensure manage_dotssh is boolean
-  if is_bool($manage_dotssh){
-    $my_manage_dotssh = $manage_dotssh
-  } elsif is_string($manage_dotssh) {
-    $my_manage_dotssh = str2bool($manage_dotssh)
-  } else {
-    fail("${name}::manage_dotssh must be boolean or string.")
-  }
-
-  # create ~/.ssh
-  if $my_manage_dotssh == true {
-    file { "${myhome}/.ssh":
-      ensure  => directory,
-      mode    => '0700',
       owner   => $name,
-      group   => $name,
-      require => User[$name],
+      mode    => $mymode,
+      require => Common::Mkdir_p[$myhome],
+    }
+
+    # ensure manage_dotssh is boolean
+    if is_bool($manage_dotssh){
+      $my_manage_dotssh = $manage_dotssh
+    } elsif is_string($manage_dotssh) {
+      $my_manage_dotssh = str2bool($manage_dotssh)
+    } else {
+      fail("${name}::manage_dotssh must be boolean or string.")
+    }
+
+    # create ~/.ssh
+    if $my_manage_dotssh == true {
+      file { "${myhome}/.ssh":
+        ensure  => directory,
+        mode    => '0700',
+        owner   => $name,
+        group   => $name,
+        require => User[$name],
+      }
     }
   }
 

@@ -28,19 +28,23 @@ describe 'common' do
 
     it {
       should contain_file('/home/alice').with({
-        'owner'  => 'alice',
-        'mode'   => '0700',
+        'owner'   => 'alice',
+        'mode'    => '0700',
+        'require' => 'Common::Mkdir_p[/home/alice]',
       })
     }
 
     it {
       should contain_file('/home/alice/.ssh').with({
-        'ensure' => 'directory',
-        'mode'   => '0700',
-        'owner'  => 'alice',
-        'group'  => 'alice',
+        'ensure'  => 'directory',
+        'mode'    => '0700',
+        'owner'   => 'alice',
+        'group'   => 'alice',
+        'require' => 'User[alice]',
       })
     }
+
+    it { should contain_common__mkdir_p('/home/alice') }
 
     it {
       should contain_group('alice').with({
@@ -86,19 +90,23 @@ describe 'common' do
 
     it {
       should contain_file('/home/superu').with({
-        'owner'  => 'myuser',
-        'mode'   => '0701',
+        'owner'   => 'myuser',
+        'mode'    => '0701',
+        'require' => 'Common::Mkdir_p[/home/superu]',
       })
     }
 
     it {
       should contain_file('/home/superu/.ssh').with({
-        'ensure' => 'directory',
-        'mode'   => '0700',
-        'owner'  => 'myuser',
-        'group'  => 'myuser',
+        'ensure'  => 'directory',
+        'mode'    => '0700',
+        'owner'   => 'myuser',
+        'group'   => 'myuser',
+        'require' => 'User[myuser]',
       })
     }
+
+    it { should contain_common__mkdir_p('/home/superu') }
 
     it { should_not contain_ssh_authorized_key('myuser') }
   end
@@ -145,35 +153,42 @@ describe 'common' do
       })
     }
 
+    it { should contain_common__mkdir_p('/home/alice') }
+    it { should contain_common__mkdir_p('/home/bob') }
+
     it {
       should contain_file('/home/alice').with({
-        'owner'  => 'alice',
-        'mode'   => '0700',
+        'owner'   => 'alice',
+        'mode'    => '0700',
+        'require' => 'Common::Mkdir_p[/home/alice]',
       })
     }
 
     it {
       should contain_file('/home/bob').with({
-        'owner'  => 'bob',
-        'mode'   => '0700',
+        'owner'   => 'bob',
+        'mode'    => '0700',
+        'require' => 'Common::Mkdir_p[/home/bob]',
       })
     }
 
     it {
       should contain_file('/home/alice/.ssh').with({
-        'ensure' => 'directory',
-        'mode'   => '0700',
-        'owner'  => 'alice',
-        'group'  => 'alice',
+        'ensure'  => 'directory',
+        'mode'    => '0700',
+        'owner'   => 'alice',
+        'group'   => 'alice',
+        'require' => 'User[alice]',
       })
     }
 
     it {
       should contain_file('/home/bob/.ssh').with({
-        'ensure' => 'directory',
-        'mode'   => '0700',
-        'owner'  => 'bob',
-        'group'  => 'bob',
+        'ensure'  => 'directory',
+        'mode'    => '0700',
+        'owner'   => 'bob',
+        'group'   => 'bob',
+        'require' => 'User[bob]',
       })
     }
 
@@ -211,6 +226,8 @@ describe 'common' do
     end
 
     it { should_not contain_file('/home/alice') }
+
+    it { should_not contain_common__mkdir_p('/home/alice') }
 
     it { should contain_user('alice').with_managehome(false) }
   end
@@ -281,52 +298,5 @@ describe 'common' do
         })
       }
     end
-  end
-
-  # purge_ssh_keys was introduced with Puppet 3.6.0
-  # we need to know which version of Puppet is running this test
-  # to decide which results we need to expect
-  # dirty trick to get the running version of Puppet:
-  clientversion = `facter puppetversion`
-  # test environments contains no facts, we need to set it as fact
-
-  describe "with purge_ssh_keys running on Puppet version #{clientversion}" do
-    let(:facts) do
-      {
-        :osfamily      => 'RedHat',
-        :puppetversion => clientversion,
-      }
-    end
-
-    context 'set to undef/nil' do
-      let(:params) { { :users => { 'alice' => { 'uid' => 1000 } } } }
-
-      if clientversion.to_f >= 3.6
-        it { should contain_user('alice').with_purge_ssh_keys(false) }
-      else
-        it { should contain_user('alice').without_purge_ssh_keys }
-      end
-    end
-
-    context 'set to true' do
-      let(:params) { { :users => { 'alice' => { 'uid' => 1000, 'purge_ssh_keys'  => true } } } }
-
-      if clientversion.to_f >= 3.6
-        it { should contain_user('alice').with_purge_ssh_keys(true) }
-      else
-        it { should contain_user('alice').without_purge_ssh_keys }
-      end
-    end
-
-    context 'set to false' do
-      let(:params) { { :users => { 'alice' => { 'uid' => 1000, 'purge_ssh_keys'  => false } } } }
-
-      if clientversion.to_f >= 3.6
-        it { should contain_user('alice').with_purge_ssh_keys(false) }
-      else
-        it { should contain_user('alice').without_purge_ssh_keys }
-      end
-    end
-
   end
 end
