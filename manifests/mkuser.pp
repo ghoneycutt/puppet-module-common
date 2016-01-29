@@ -139,11 +139,14 @@ define common::mkuser (
   } # user
 
   if $create_group {
-    group { $name:
-      ensure => $ensure,
-      gid    => $mygid,
-      name   => $mygroup,
-    } # group
+    # If the group is not already defined, ensure its existence
+    if !defined(Group[$name]) {
+      group { $name:
+        ensure => $ensure,
+        gid    => $mygid,
+        name   => $mygroup,
+      }
+    }
   }
 
   # If managing home, then set the mode of the home directory. This allows for
