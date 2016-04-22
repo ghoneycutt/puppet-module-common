@@ -110,7 +110,7 @@ define common::mkuser (
     $mypurgekey = false
   }
 
-  if versioncmp("${::puppetversion}", '3.6') > 0 { # lint:ignore:only_variable_string
+  if versioncmp("${::puppetversion}", '3.6') >= 0 { # lint:ignore:only_variable_string
     User {
       purge_ssh_keys => $mypurgekey,
     }

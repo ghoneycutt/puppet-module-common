@@ -1,8 +1,20 @@
 require 'spec_helper'
 
+clientversion = `facter puppetversion`
+
 describe 'common' do
+  let(:facts) do
+    { :osfamily      => 'RedHat',
+      :puppetversion => clientversion,
+    }
+  end
+
   context 'one user with default values' do
-    let(:facts) { { :osfamily => 'RedHat' } }
+    let(:facts) do
+      { :osfamily      => 'RedHat',
+        :puppetversion => clientversion,
+      }
+    end
     let(:params) do
       { :users => {
           'alice' => {
@@ -58,7 +70,11 @@ describe 'common' do
   end
 
   context 'one user with custom values' do
-    let(:facts) { { :osfamily => 'RedHat' } }
+    let(:facts) do
+      { :osfamily      => 'RedHat',
+        :puppetversion => clientversion,
+      }
+    end
     let(:params) do
       { :users =>  {
           'myuser' => {
@@ -112,7 +128,11 @@ describe 'common' do
   end
 
   context 'two users with default values' do
-    let(:facts) { { :osfamily => 'RedHat' } }
+    let(:facts) do
+      { :osfamily      => 'RedHat',
+        :puppetversion => clientversion,
+      }
+    end
     let(:params) do
       { :users => {
          'alice' => {
@@ -214,7 +234,11 @@ describe 'common' do
   end
 
   context 'do not manage home' do
-    let(:facts) { { :osfamily => 'RedHat' } }
+    let(:facts) do
+      { :osfamily      => 'RedHat',
+        :puppetversion => clientversion,
+      }
+    end
     let(:params) do
       { :users => {
           'alice' => {
@@ -233,7 +257,11 @@ describe 'common' do
   end
 
   context 'do not manage dotssh' do
-    let(:facts) { { :osfamily => 'RedHat' } }
+    let(:facts) do
+      { :osfamily      => 'RedHat',
+        :puppetversion => clientversion,
+      }
+    end
     let(:params) do
       { :users => {
         'alice' => {
@@ -251,7 +279,11 @@ describe 'common' do
 
   describe 'with ssh_auth_key parameter specified' do
     context 'with defaults for ssh_auth_key_type parameter' do
-      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:facts) do
+        { :osfamily      => 'RedHat',
+          :puppetversion => clientversion,
+        }
+      end
       let(:params) do
         {
           :users => {
@@ -275,7 +307,11 @@ describe 'common' do
     end
 
     context 'with ssh_auth_key_type parameter specified' do
-      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:facts) do
+        { :osfamily      => 'RedHat',
+          :puppetversion => clientversion,
+        }
+      end
       let(:params) do
         {
           :users => {
