@@ -1,6 +1,6 @@
 {
   "name": "ghoneycutt-common",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "author": "ghoneycutt",
   "summary": "common module to be applied to all nodes",
   "description": "Provide ability to include modules that are common to all nodes.",
@@ -9,7 +9,7 @@
   "project_page": "https://github.com/ghoneycutt/puppet-module-common",
   "issues_url": "https://github.com/ghoneycutt/puppet-module-common/issues",
   "requirements": [
-    {"name":"puppet","version_requirement":">= 3.0.0 < 5.0.0"}
+    {"name":"puppet","version_requirement":">= 3.0.0 < 6.0.0"}
   ],
   "dependencies": [
     {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.0.0"}
