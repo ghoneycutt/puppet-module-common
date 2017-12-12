@@ -30,6 +30,7 @@ describe 'common::mkuser' do
     it do
       should contain_file('/home/alice').with({
         'owner'   => 'alice',
+        'group'   => 'alice',
         'mode'    => '0700',
         'require' => 'Common::Mkdir_p[/home/alice]',
       })
@@ -88,6 +89,7 @@ describe 'common::mkuser' do
     it do
       should contain_file('/home/superu').with({
         'owner'   => 'alice',
+        'group'   => 'superusers',
         'mode'    => '0701',
         'require' => 'Common::Mkdir_p[/home/superu]',
       })

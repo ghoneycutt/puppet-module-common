@@ -157,6 +157,7 @@ define common::mkuser (
 
     file { $myhome:
       owner   => $name,
+      group   => $mygroup,
       mode    => $mymode,
       require => Common::Mkdir_p[$myhome],
     }
