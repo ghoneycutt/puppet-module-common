@@ -1,6 +1,6 @@
 {
   "name": "ghoneycutt-common",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "author": "ghoneycutt",
   "summary": "common module to be applied to all nodes",
   "description": "Provide ability to include modules that are common to all nodes.",
@@ -12,8 +12,8 @@
     {"name":"puppet","version_requirement":">= 3.0.0 < 7.0.0"}
   ],
   "dependencies": [
-    {"name":"puppetlabs/sshkeys_core","version_requirement":">= 1.0.1 <2.1.0"},
-    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.4.0"}
+    {"name":"puppetlabs/sshkeys_core","version_requirement":">= 1.0.1 <2.0.0"},
+    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 7.0.0"}
   ],
   "operatingsystem_support": [
     {
