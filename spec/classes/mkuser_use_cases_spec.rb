@@ -5,6 +5,7 @@ clientversion = `facter puppetversion`
 describe 'common' do
   let(:facts) do
     {
+      os: { family: 'RedHat' },
       osfamily: 'RedHat',
       puppetversion: clientversion,
     }
@@ -13,6 +14,7 @@ describe 'common' do
   context 'one user with default values' do
     let(:facts) do
       {
+        os: { family: 'RedHat' },
         osfamily: 'RedHat',
         puppetversion: clientversion,
       }
@@ -37,7 +39,7 @@ describe 'common' do
           'ensure'     => 'present',
           'groups'     => 'alice',
           'password'   => '!!',
-          'managehome' => 'true',
+          'managehome' => true,
           'comment'    => 'created via puppet',
         },
       )
@@ -83,6 +85,7 @@ describe 'common' do
   context 'one user with custom values' do
     let(:facts) do
       {
+        os: { family: 'RedHat' },
         osfamily: 'RedHat',
         puppetversion: clientversion,
       }
@@ -152,6 +155,7 @@ describe 'common' do
   context 'two users with default values' do
     let(:facts) do
       {
+        os: { family: 'RedHat' },
         osfamily: 'RedHat',
         puppetversion: clientversion,
       }
@@ -279,7 +283,8 @@ describe 'common' do
 
   context 'do not manage home' do
     let(:facts) do
-      { osfamily: 'RedHat',
+      { os: { family: 'RedHat' },
+        osfamily: 'RedHat',
         puppetversion: clientversion, }
     end
     let(:params) do
@@ -303,6 +308,7 @@ describe 'common' do
   context 'do not manage dotssh' do
     let(:facts) do
       {
+        os: { family: 'RedHat' },
         osfamily: 'RedHat',
         puppetversion: clientversion,
       }
@@ -327,6 +333,7 @@ describe 'common' do
     context 'with defaults for ssh_auth_key_type parameter' do
       let(:facts) do
         {
+          os: { family: 'RedHat' },
           osfamily: 'RedHat',
           puppetversion: clientversion,
         }
@@ -362,6 +369,7 @@ describe 'common' do
     context 'with ssh_auth_key_type parameter specified' do
       let(:facts) do
         {
+          os: { family: 'RedHat' },
           osfamily: 'RedHat',
           puppetversion: clientversion,
         }

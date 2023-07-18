@@ -1,41 +1,119 @@
-# == Class: common
+# @summary Common module to be applied to **ALL** nodes
+#   === Compatibility
+#   Module is generic enough to work on any system, though the individual
+#   modules that it could potentially include could be very platform specific.
 #
-# This class is applied to *ALL* nodes
+#   === Copyright
+#   Copyright 2013 GH Solutions, LLC
 #
-# === Copyright
+# @param users
+#   Hash of users to ensure with common::mkusers.
 #
-# Copyright 2013 GH Solutions, LLC
+# @param groups
+#   Hash of groups to ensure.
+#
+# @param manage_root_password
+#   If root password should be managed.
+#
+# @param root_password
+#   MD5 crypt of `puppet`.
+#
+# @param create_opt_lsb_provider_name_dir
+#   Boolean to ensure `/opt/${lsb_provider_name}`.
+#
+# @param lsb_provider_name
+#   LSB Provider Name as assigned by LANANA
+#   [http://www.lanana.org/lsbreg/providers/index.html](http://www.lanana.org/lsbreg/providers/index.html)
+#
+# @param enable_dnsclient
+#   Boolean to include ghoneycutt/dnsclient.
+#
+# @param enable_hosts
+#   Boolean to include ghoneycutt/hosts.
+#
+# @param enable_inittab
+#   Boolean to include ghoneycutt/inittab.
+#
+# @param enable_mailaliases
+#   Boolean to include ghoneycutt/mailaliases.
+#
+# @param enable_motd
+#   Boolean to include ghoneycutt/motd.
+#
+# @param enable_network
+#   Boolean to include ghoneycutt/network.
+#
+# @param enable_nsswitch
+#   Boolean to include ghoneycutt/nsswitch.
+#
+# @param enable_ntp
+#   Boolean to include ghoneycutt/ntp.
+#
+# @param enable_pam
+#   Boolean to include ghoneycutt/pam.
+#
+# @param enable_puppet_agent
+#   Boolean to include ghoneycutt/puppet::agent.
+#
+# @param enable_rsyslog
+#   Boolean to include ghoneycutt/rsyslog.
+#
+# @param enable_selinux
+#   Boolean to include ghoneycutt/selinux.
+#
+# @param enable_ssh
+#   Boolean to include ghoneycutt/ssh.
+#
+# @param enable_utils
+#   Boolean to include ghoneycutt/utils.
+#
+# @param enable_vim
+#   Boolean to include ghoneycutt/vim.
+#
+# @param enable_wget
+#   Boolean to include ghoneycutt/wget.
+#
+# @param enable_debian
+#   Boolean to include ghoneycutt/debian.
+#
+# @param enable_redhat
+#   Boolean to include ghoneycutt/redhat.
+#
+# @param enable_solaris
+#   Boolean to include ghoneycutt/solaris.
+#
+# @param enable_suse
+#   Boolean to include ghoneycutt/suse.
 #
 class common (
-  $users                            = undef,
-  $groups                           = undef,
-  $manage_root_password             = false,
-  $root_password                    = '$1$cI5K51$dexSpdv6346YReZcK2H1k.', # puppet
-  $create_opt_lsb_provider_name_dir = false,
-  $lsb_provider_name                = 'UNSET',
-  $enable_dnsclient                 = false,
-  $enable_hosts                     = false,
-  $enable_inittab                   = false,
-  $enable_mailaliases               = false,
-  $enable_motd                      = false,
-  $enable_network                   = false,
-  $enable_nsswitch                  = false,
-  $enable_ntp                       = false,
-  $enable_pam                       = false,
-  $enable_puppet_agent              = false,
-  $enable_rsyslog                   = false,
-  $enable_selinux                   = false,
-  $enable_ssh                       = false,
-  $enable_utils                     = false,
-  $enable_vim                       = false,
-  $enable_wget                      = false,
+  Optional[Hash] $users                            = undef,
+  Optional[Hash] $groups                           = undef,
+  Boolean        $manage_root_password             = false,
+  String[1]      $root_password                    = '$1$cI5K51$dexSpdv6346YReZcK2H1k.', # puppet
+  Boolean        $create_opt_lsb_provider_name_dir = false,
+  String[1]      $lsb_provider_name                = 'UNSET',
+  Boolean        $enable_dnsclient                 = false,
+  Boolean        $enable_hosts                     = false,
+  Boolean        $enable_inittab                   = false,
+  Boolean        $enable_mailaliases               = false,
+  Boolean        $enable_motd                      = false,
+  Boolean        $enable_network                   = false,
+  Boolean        $enable_nsswitch                  = false,
+  Boolean        $enable_ntp                       = false,
+  Boolean        $enable_pam                       = false,
+  Boolean        $enable_puppet_agent              = false,
+  Boolean        $enable_rsyslog                   = false,
+  Boolean        $enable_selinux                   = false,
+  Boolean        $enable_ssh                       = false,
+  Boolean        $enable_utils                     = false,
+  Boolean        $enable_vim                       = false,
+  Boolean        $enable_wget                      = false,
   # include classes based on osfamily fact
-  $enable_debian                    = false,
-  $enable_redhat                    = false,
-  $enable_solaris                   = false,
-  $enable_suse                      = false,
+  Boolean        $enable_debian                    = false,
+  Boolean        $enable_redhat                    = false,
+  Boolean        $enable_solaris                   = false,
+  Boolean        $enable_suse                      = false,
 ) {
-
   # validate type and convert string to boolean if necessary
   if is_string($enable_dnsclient) {
     $dnsclient_enabled = str2bool($enable_dnsclient)
@@ -43,7 +121,7 @@ class common (
     $dnsclient_enabled = $enable_dnsclient
   }
   if $dnsclient_enabled == true {
-    include ::dnsclient
+    include dnsclient
   }
 
   # validate type and convert string to boolean if necessary
@@ -53,7 +131,7 @@ class common (
     $hosts_enabled = $enable_hosts
   }
   if $hosts_enabled == true {
-    include ::hosts
+    include hosts
   }
 
   # validate type and convert string to boolean if necessary
@@ -63,7 +141,7 @@ class common (
     $inittab_enabled = $enable_inittab
   }
   if $inittab_enabled == true {
-    include ::inittab
+    include inittab
   }
 
   # validate type and convert string to boolean if necessary
@@ -73,7 +151,7 @@ class common (
     $mailaliases_enabled = $enable_mailaliases
   }
   if $mailaliases_enabled == true {
-    include ::mailaliases
+    include mailaliases
   }
 
   # validate type and convert string to boolean if necessary
@@ -83,7 +161,7 @@ class common (
     $motd_enabled = $enable_motd
   }
   if $motd_enabled == true {
-    include ::motd
+    include motd
   }
 
   # validate type and convert string to boolean if necessary
@@ -93,7 +171,7 @@ class common (
     $network_enabled = $enable_network
   }
   if $network_enabled == true {
-    include ::network
+    include network
   }
 
   # validate type and convert string to boolean if necessary
@@ -103,7 +181,7 @@ class common (
     $nsswitch_enabled = $enable_nsswitch
   }
   if $nsswitch_enabled == true {
-    include ::nsswitch
+    include nsswitch
   }
 
   # validate type and convert string to boolean if necessary
@@ -113,7 +191,7 @@ class common (
     $ntp_enabled = $enable_ntp
   }
   if $ntp_enabled == true {
-    include ::ntp
+    include ntp
   }
 
   # validate type and convert string to boolean if necessary
@@ -123,7 +201,7 @@ class common (
     $pam_enabled = $enable_pam
   }
   if $pam_enabled == true {
-    include ::pam
+    include pam
   }
 
   # validate type and convert string to boolean if necessary
@@ -133,7 +211,7 @@ class common (
     $puppet_agent_enabled = $enable_puppet_agent
   }
   if $puppet_agent_enabled == true {
-    include ::puppet::agent
+    include puppet::agent
   }
 
   # validate type and convert string to boolean if necessary
@@ -143,7 +221,7 @@ class common (
     $rsyslog_enabled = $enable_rsyslog
   }
   if $rsyslog_enabled == true {
-    include ::rsyslog
+    include rsyslog
   }
 
   # validate type and convert string to boolean if necessary
@@ -153,7 +231,7 @@ class common (
     $selinux_enabled = $enable_selinux
   }
   if $selinux_enabled == true {
-    include ::selinux
+    include selinux
   }
 
   # validate type and convert string to boolean if necessary
@@ -163,7 +241,7 @@ class common (
     $ssh_enabled = $enable_ssh
   }
   if $ssh_enabled == true {
-    include ::ssh
+    include ssh
   }
 
   # validate type and convert string to boolean if necessary
@@ -173,7 +251,7 @@ class common (
     $utils_enabled = $enable_utils
   }
   if $utils_enabled == true {
-    include ::utils
+    include utils
   }
 
   # validate type and convert string to boolean if necessary
@@ -183,7 +261,7 @@ class common (
     $vim_enabled = $enable_vim
   }
   if $vim_enabled == true {
-    include ::vim
+    include vim
   }
 
   # validate type and convert string to boolean if necessary
@@ -193,11 +271,11 @@ class common (
     $wget_enabled = $enable_wget
   }
   if $wget_enabled == true {
-    include ::wget
+    include wget
   }
 
   # only allow supported OS's
-  case $::osfamily {
+  case $::facts['os']['family'] {
     'debian': {
       # validate type and convert string to boolean if necessary
       if is_string($enable_debian) {
@@ -206,7 +284,7 @@ class common (
         $debian_enabled = $enable_debian
       }
       if $debian_enabled == true {
-        include ::debian
+        include debian
       }
     }
     'redhat': {
@@ -217,7 +295,7 @@ class common (
         $redhat_enabled = $enable_redhat
       }
       if $redhat_enabled == true {
-        include ::redhat
+        include redhat
       }
     }
     'solaris': {
@@ -228,7 +306,7 @@ class common (
         $solaris_enabled = $enable_solaris
       }
       if $solaris_enabled == true {
-        include ::solaris
+        include solaris
       }
     }
     'suse': {
@@ -239,11 +317,11 @@ class common (
         $suse_enabled = $enable_suse
       }
       if $suse_enabled == true {
-        include ::suse
+        include suse
       }
     }
     default: {
-      fail("Supported OS families are Debian, RedHat, Solaris, and Suse. Detected osfamily is ${::osfamily}.")
+      fail("Supported OS families are Debian, RedHat, Solaris, and Suse. Detected osfamily is ${::facts['os']['family']}.")
     }
   }
 
@@ -255,7 +333,6 @@ class common (
   }
 
   if $manage_root_password_real == true {
-
     # validate root_password - fail if not a string
     if !is_string($root_password) {
       fail('common::root_password is not a string.')
@@ -274,14 +351,12 @@ class common (
   }
 
   if $create_opt_lsb_provider_name_dir_real == true {
-
     # validate lsb_provider_name - fail if not a string
     if !is_string($lsb_provider_name) {
       fail('common::lsb_provider_name is not a string.')
     }
 
     if $lsb_provider_name != 'UNSET' {
-
       # basic filesystem requirements
       file { "/opt/${lsb_provider_name}":
         ensure => directory,
@@ -293,7 +368,6 @@ class common (
   }
 
   if $users != undef {
-
     # Create virtual user resources
     create_resources('@common::mkuser',$common::users)
 
@@ -302,7 +376,6 @@ class common (
   }
 
   if $groups != undef {
-
     # Create virtual group resources
     create_resources('@group',$common::groups)
 

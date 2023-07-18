@@ -1,60 +1,93 @@
-# == Define: common::mkuser
+# @summary Class to manage users and groups
+#   mkuser creates a user/group that can be realized in the module that employs it
 #
-# mkuser creates a user/group that can be realized in the module that employs it
+#   Copyright 2007-2013 Garrett Honeycutt
+#   contact@garretthoneycutt.com - Licensed GPLv2
 #
-# Copyright 2007-2013 Garrett Honeycutt
-# contact@garretthoneycutt.com - Licensed GPLv2
+#   Actions: creates a user/group
 #
-# Parameters:
-#   $uid               - UID of user
-#   $gid               - GID of user, defaults to UID
-#   $group             - group name of user, defaults to username
-#   $shell             - user's shell, defaults to '/bin/bash'
-#   $home              - home directory, defaults to /home/<username>
-#   $ensure            - present by default
-#   $managehome        - true by default
-#   $manage_dotssh     - true by default. creates ~/.ssh
-#   $comment           - comment field for passwd
-#   $groups            - additional groups the user should be associated with
-#   $password          - defaults to '!!'
-#   $mode              - mode of home directory, defaults to 0700
-#   $ssh_auth_key      - ssh key of the user
-#   $ssh_auth_key_type - defaults to 'ssh-dss'
+#   Requires:
+#     $uid
 #
-# Actions: creates a user/group
+#   Sample Usage:
+#     # create apachehup user and realize it
+#     @mkuser { 'apachehup':
+#         uid        => '32001',
+#         home       => '/home/apachehup',
+#         comment    => 'Apache Restart User',
+#     } # @mkuser
 #
-# Requires:
-#   $uid
+#     realize Common::Mkuser[apachehup]
 #
-# Sample Usage:
-#   # create apachehup user and realize it
-#   @mkuser { 'apachehup':
-#       uid        => '32001',
-#       home       => '/home/apachehup',
-#       comment    => 'Apache Restart User',
-#   } # @mkuser
+# @param uid
+#   UID of user.
 #
-#   realize Common::Mkuser[apachehup]
+# @param gid
+#   GID of user.
+#
+# @param group
+#   Group name of user.
+#
+# @param shell
+#   Absolute path to user shell.
+#
+# @param home
+#   Absolute path to home directory.
+#
+# @param ensure
+#   Ensure parameter of user resource.
+#
+# @param managehome
+#   Managehome attribute of user resource.
+#
+# @param manage_dotssh
+#   If optional `~/.ssh` should be created.
+#
+# @param comment
+#   GECOS field for passwd.
+#
+# @param groups
+#   Additional groups the user should be associated with.
+#
+# @param password
+#   Password crypt for user.
+#
+# @param mode
+#   Mode of home directory.
+#
+# @param ssh_auth_key
+#   Ssh key for the user.
+#
+# @param create_group
+#   Ensure to create the group if it is not already existing.
+#
+# @param ssh_auth_key_type
+#   Type attribute of ssh_authorized_key resource.
+#
+# @param purge_ssh_keys
+#   purge_ssh_keys attribute of the user resource.
+#   Purge any keys that aren’t managed as ssh_authorized_key resources.
+#   As this parameter was introduced with Puppet 3.6, it will only work with
+#   Puppet >= 3.6. On earlier version this parameter will be silently ignored.
 #
 define common::mkuser (
-  $uid,
-  $gid               = undef,
-  $group             = undef,
-  $shell             = undef,
-  $home              = undef,
-  $ensure            = 'present',
-  $managehome        = true,
-  $manage_dotssh     = true,
-  $comment           = 'created via puppet',
-  $groups            = undef,
-  $password          = undef,
-  $mode              = undef,
-  $ssh_auth_key      = undef,
-  $create_group      = true,
-  $ssh_auth_key_type = undef,
-  $purge_ssh_keys    = undef,
+  Integer                           $uid,
+  Optional[Integer]                 $gid               = undef,
+  Optional[String[1]]               $group             = undef,
+  Optional[Stdlib::Absolutepath]    $shell             = undef,
+  Optional[Stdlib::Absolutepath]    $home              = undef,
+  Enum['present', 'absent', 'role'] $ensure            = 'present',
+  Boolean                           $managehome        = true,
+  Boolean                           $manage_dotssh     = true,
+  String[1]                         $comment           = 'created via puppet',
+  Optional[Array]                   $groups            = undef,
+  Optional[String[1]]               $password          = undef,
+  Optional[Stdlib::Filemode]        $mode              = undef,
+  Optional[String[1]]               $ssh_auth_key      = undef,
+  Boolean                           $create_group      = true,
+  Optional[String[1]]               $ssh_auth_key_type = undef,
+  Optional[Boolean]                 $purge_ssh_keys    = undef,
 ) {
-
   if $shell {
     $myshell = $shell
   } else {
@@ -110,14 +143,14 @@ define common::mkuser (
     $mypurgekey = false
   }
 
-  if versioncmp("${::puppetversion}", '3.6') >= 0 { # lint:ignore:only_variable_string
+  if versioncmp("${::facts['puppetversion']}", '3.6') >= 0 { # lint:ignore:only_variable_string
     User {
       purge_ssh_keys => $mypurgekey,
     }
   }
 
   # ensure managehome is boolean
-  if is_bool($managehome){
+  if is_bool($managehome) {
     $my_managehome = $managehome
   } elsif is_string($managehome) {
     $my_managehome = str2bool($managehome)
@@ -152,7 +185,6 @@ define common::mkuser (
   # If managing home, then set the mode of the home directory. This allows for
   # modes other than 0700 for $HOME.
   if $my_managehome == true {
-
     common::mkdir_p { $myhome: }
 
     file { $myhome:
@@ -163,7 +195,7 @@ define common::mkuser (
     }
 
     # ensure manage_dotssh is boolean
-    if is_bool($manage_dotssh){
+    if is_bool($manage_dotssh) {
       $my_manage_dotssh = $manage_dotssh
     } elsif is_string($manage_dotssh) {
       $my_manage_dotssh = str2bool($manage_dotssh)

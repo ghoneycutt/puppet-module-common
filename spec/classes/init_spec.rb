@@ -2,13 +2,13 @@ require 'spec_helper'
 describe 'common' do
   describe 'class common' do
     context 'default options with supported OS' do
-      let(:facts) { { osfamily: 'RedHat' } }
+      let(:facts) { { os: { family: 'RedHat' }, osfamily: 'RedHat' } }
 
       it { is_expected.to contain_class('common') }
     end
 
     context 'default options with unsupported osfamily, Gentoo, is_expected.to fail' do
-      let(:facts) { { osfamily: 'Gentoo' } }
+      let(:facts) { { os: { family: 'Gentoo' }, osfamily: 'Gentoo' } }
 
       it do
         expect {
@@ -19,7 +19,7 @@ describe 'common' do
 
     describe 'managing root password' do
       context 'manage_root_password => true with default root_password' do
-        let(:facts) { { osfamily: 'RedHat' } }
+        let(:facts) { { os: { family: 'RedHat' }, osfamily: 'RedHat' } }
         let(:params) { { manage_root_password: true } }
 
         it { is_expected.to contain_class('common') }
@@ -27,7 +27,7 @@ describe 'common' do
       end
 
       context 'manage_root_password => true and root_password => foo' do
-        let(:facts) { { osfamily: 'RedHat' } }
+        let(:facts) { { os: { family: 'RedHat' }, osfamily: 'RedHat' } }
         let(:params) do
           {
             manage_root_password: true,
@@ -42,7 +42,7 @@ describe 'common' do
 
     describe 'managing /opt/$lanana' do
       context 'create_opt_lsb_provider_name_dir => true and lsb_provider_name => UNSET [default]' do
-        let(:facts) { { osfamily: 'RedHat' } }
+        let(:facts) { { os: { family: 'RedHat' }, osfamily: 'RedHat' } }
         let(:params) do
           { create_opt_lsb_provider_name_dir: true,
             lsb_provider_name: 'UNSET', }
@@ -53,7 +53,7 @@ describe 'common' do
       end
 
       context 'create_opt_lsb_provider_name_dir => true and lsb_provider_name => foo' do
-        let(:facts) { { osfamily: 'RedHat' } }
+        let(:facts) { { os: { family: 'RedHat' }, osfamily: 'RedHat' } }
         let(:params) do
           {
             create_opt_lsb_provider_name_dir: true,
