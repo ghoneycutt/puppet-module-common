@@ -114,209 +114,89 @@ class common (
   Boolean        $enable_solaris                   = false,
   Boolean        $enable_suse                      = false,
 ) {
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_dnsclient) {
-    $dnsclient_enabled = str2bool($enable_dnsclient)
-  } else {
-    $dnsclient_enabled = $enable_dnsclient
-  }
-  if $dnsclient_enabled == true {
+  if $enable_dnsclient == true {
     include dnsclient
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_hosts) {
-    $hosts_enabled = str2bool($enable_hosts)
-  } else {
-    $hosts_enabled = $enable_hosts
-  }
-  if $hosts_enabled == true {
+  if $enable_hosts == true {
     include hosts
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_inittab) {
-    $inittab_enabled = str2bool($enable_inittab)
-  } else {
-    $inittab_enabled = $enable_inittab
-  }
-  if $inittab_enabled == true {
+  if $enable_inittab == true {
     include inittab
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_mailaliases) {
-    $mailaliases_enabled = str2bool($enable_mailaliases)
-  } else {
-    $mailaliases_enabled = $enable_mailaliases
-  }
-  if $mailaliases_enabled == true {
+  if $enable_mailaliases == true {
     include mailaliases
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_mailaliases) {
-    $motd_enabled = str2bool($enable_motd)
-  } else {
-    $motd_enabled = $enable_motd
-  }
-  if $motd_enabled == true {
+  if $enable_motd == true {
     include motd
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_network) {
-    $network_enabled = str2bool($enable_network)
-  } else {
-    $network_enabled = $enable_network
-  }
-  if $network_enabled == true {
+  if $enable_network == true {
     include network
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_nsswitch) {
-    $nsswitch_enabled = str2bool($enable_nsswitch)
-  } else {
-    $nsswitch_enabled = $enable_nsswitch
-  }
-  if $nsswitch_enabled == true {
+  if $enable_nsswitch == true {
     include nsswitch
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_ntp) {
-    $ntp_enabled = str2bool($enable_ntp)
-  } else {
-    $ntp_enabled = $enable_ntp
-  }
-  if $ntp_enabled == true {
+  if $enable_ntp == true {
     include ntp
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_pam) {
-    $pam_enabled = str2bool($enable_pam)
-  } else {
-    $pam_enabled = $enable_pam
-  }
-  if $pam_enabled == true {
+  if $enable_pam == true {
     include pam
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_puppet_agent) {
-    $puppet_agent_enabled = str2bool($enable_puppet_agent)
-  } else {
-    $puppet_agent_enabled = $enable_puppet_agent
-  }
-  if $puppet_agent_enabled == true {
+  if $enable_puppet_agent == true {
     include puppet::agent
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_rsyslog) {
-    $rsyslog_enabled = str2bool($enable_rsyslog)
-  } else {
-    $rsyslog_enabled = $enable_rsyslog
-  }
-  if $rsyslog_enabled == true {
+  if $enable_rsyslog == true {
     include rsyslog
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_selinux) {
-    $selinux_enabled = str2bool($enable_selinux)
-  } else {
-    $selinux_enabled = $enable_selinux
-  }
-  if $selinux_enabled == true {
+  if $enable_selinux == true {
     include selinux
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_ssh) {
-    $ssh_enabled = str2bool($enable_ssh)
-  } else {
-    $ssh_enabled = $enable_ssh
-  }
-  if $ssh_enabled == true {
+  if $enable_ssh == true {
     include ssh
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_utils) {
-    $utils_enabled = str2bool($enable_utils)
-  } else {
-    $utils_enabled = $enable_utils
-  }
-  if $utils_enabled == true {
+  if $enable_utils == true {
     include utils
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_vim) {
-    $vim_enabled = str2bool($enable_vim)
-  } else {
-    $vim_enabled = $enable_vim
-  }
-  if $vim_enabled == true {
+  if $enable_vim == true {
     include vim
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($enable_wget) {
-    $wget_enabled = str2bool($enable_wget)
-  } else {
-    $wget_enabled = $enable_wget
-  }
-  if $wget_enabled == true {
+  if $enable_wget == true {
     include wget
   }
 
   # only allow supported OS's
   case $::facts['os']['family'] {
     'debian': {
-      # validate type and convert string to boolean if necessary
-      if is_string($enable_debian) {
-        $debian_enabled = str2bool($enable_debian)
-      } else {
-        $debian_enabled = $enable_debian
-      }
-      if $debian_enabled == true {
+      if $enable_debian == true {
         include debian
       }
     }
     'redhat': {
-      # validate type and convert string to boolean if necessary
-      if is_string($enable_redhat) {
-        $redhat_enabled = str2bool($enable_redhat)
-      } else {
-        $redhat_enabled = $enable_redhat
-      }
-      if $redhat_enabled == true {
+      if $enable_redhat == true {
         include redhat
       }
     }
     'solaris': {
-      # validate type and convert string to boolean if necessary
-      if is_string($enable_solaris) {
-        $solaris_enabled = str2bool($enable_solaris)
-      } else {
-        $solaris_enabled = $enable_solaris
-      }
-      if $solaris_enabled == true {
+      if $enable_solaris == true {
         include solaris
       }
     }
     'suse': {
-      # validate type and convert string to boolean if necessary
-      if is_string($enable_suse) {
-        $suse_enabled = str2bool($enable_suse)
-      } else {
-        $suse_enabled = $enable_suse
-      }
-      if $suse_enabled == true {
+      if $enable_suse == true {
         include suse
       }
     }
@@ -325,37 +205,13 @@ class common (
     }
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($manage_root_password) {
-    $manage_root_password_real = str2bool($manage_root_password)
-  } else {
-    $manage_root_password_real = $manage_root_password
-  }
-
-  if $manage_root_password_real == true {
-    # validate root_password - fail if not a string
-    if !is_string($root_password) {
-      fail('common::root_password is not a string.')
-    }
-
+  if $manage_root_password == true {
     user { 'root':
       password => $root_password,
     }
   }
 
-  # validate type and convert string to boolean if necessary
-  if is_string($create_opt_lsb_provider_name_dir) {
-    $create_opt_lsb_provider_name_dir_real = str2bool($create_opt_lsb_provider_name_dir)
-  } else {
-    $create_opt_lsb_provider_name_dir_real = $create_opt_lsb_provider_name_dir
-  }
-
-  if $create_opt_lsb_provider_name_dir_real == true {
-    # validate lsb_provider_name - fail if not a string
-    if !is_string($lsb_provider_name) {
-      fail('common::lsb_provider_name is not a string.')
-    }
-
+  if $create_opt_lsb_provider_name_dir == true {
     if $lsb_provider_name != 'UNSET' {
       # basic filesystem requirements
       file { "/opt/${lsb_provider_name}":

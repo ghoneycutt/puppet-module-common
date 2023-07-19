@@ -74,7 +74,7 @@ define common::mkuser (
   Integer                           $uid,
   Optional[Integer]                 $gid               = undef,
   Optional[String[1]]               $group             = undef,
-  Optional[Stdlib::Absolutepath]    $shell             = undef,
+  Stdlib::Absolutepath              $shell             = '/bin/bash',
   Optional[Stdlib::Absolutepath]    $home              = undef,
   Enum['present', 'absent', 'role'] $ensure            = 'present',
   Boolean                           $managehome        = true,
@@ -88,12 +88,6 @@ define common::mkuser (
   Optional[String[1]]               $ssh_auth_key_type = undef,
   Optional[Boolean]                 $purge_ssh_keys    = undef,
 ) {
-  if $shell {
-    $myshell = $shell
-  } else {
-    $myshell = '/bin/bash'
-  }
-
   # if gid is unspecified, match with uid
   if $gid {
     $mygid = $gid
@@ -163,7 +157,7 @@ define common::mkuser (
     ensure     => $ensure,
     uid        => $uid,
     gid        => $mygid,
-    shell      => $myshell,
+    shell      => $shell,
     groups     => $mygroups,
     password   => $mypassword,
     managehome => $my_managehome,
