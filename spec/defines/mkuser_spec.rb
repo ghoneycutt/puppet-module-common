@@ -225,16 +225,10 @@ describe 'common::mkuser' do
 
         validations = {
           'Boolean' => {
-            name:    ['managehome', 'manage_dotssh'],
+            name:    ['managehome', 'manage_dotssh', 'purge_ssh_keys'],
             valid:   [true, false],
             invalid: ['invalid', ['array'], { 'ha' => 'sh' }, 3, 2.42, nil],
             message: 'expects a Boolean',
-          },
-          'Optional[Boolean]' => {
-            name:    ['purge_ssh_keys'],
-            valid:   [true, false],
-            invalid: ['invalid', ['array'], { 'ha' => 'sh' }, 3, 2.42, nil],
-            message: 'expects a value of type Undef or Boolean',
           },
         }
 

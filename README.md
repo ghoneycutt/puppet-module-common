@@ -355,9 +355,7 @@ String - Anything that the ssh_authorized_key resource can take for the type att
 
 purge_ssh_keys
 -----------------
-Boolean - Purge any keys that aren’t managed as ssh_authorized_key resources. As this parameter was introduced with Puppet 3.6,
-it will only work with Puppet >= 3.6. On earlier version this parameter will be silently ignored.
-
+Boolean - Purge any keys that aren’t managed as ssh_authorized_key resources.
 
 - *Default*: false
 

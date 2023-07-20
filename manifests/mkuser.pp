@@ -67,8 +67,6 @@
 # @param purge_ssh_keys
 #   purge_ssh_keys attribute of the user resource.
 #   Purge any keys that aren’t managed as ssh_authorized_key resources.
-#   As this parameter was introduced with Puppet 3.6, it will only work with
-#   Puppet >= 3.6. On earlier version this parameter will be silently ignored.
 #
 define common::mkuser (
   Integer                           $uid,
@@ -86,7 +84,7 @@ define common::mkuser (
   Optional[String[1]]               $ssh_auth_key      = undef,
   Boolean                           $create_group      = true,
   Optional[String[1]]               $ssh_auth_key_type = undef,
-  Optional[Boolean]                 $purge_ssh_keys    = undef,
+  Boolean                           $purge_ssh_keys    = false,
 ) {
   # if gid is unspecified, match with uid
   if $gid {
@@ -130,19 +128,6 @@ define common::mkuser (
     $mymode = '0700'
   }
 
-  if $purge_ssh_keys != undef {
-    $mypurgekey = str2bool($purge_ssh_keys)
-    validate_bool($mypurgekey)
-  } else {
-    $mypurgekey = false
-  }
-
-  if versioncmp("${::facts['puppetversion']}", '3.6') >= 0 { # lint:ignore:only_variable_string
-    User {
-      purge_ssh_keys => $mypurgekey,
-    }
-  }
-
   # ensure managehome is boolean
   if is_bool($managehome) {
     $my_managehome = $managehome
@@ -154,15 +139,16 @@ define common::mkuser (
 
   # create user
   user { $name:
-    ensure     => $ensure,
-    uid        => $uid,
-    gid        => $mygid,
-    shell      => $shell,
-    groups     => $mygroups,
-    password   => $mypassword,
-    managehome => $my_managehome,
-    home       => $myhome,
-    comment    => $comment,
+    ensure         => $ensure,
+    uid            => $uid,
+    gid            => $mygid,
+    shell          => $shell,
+    groups         => $mygroups,
+    password       => $mypassword,
+    managehome     => $my_managehome,
+    home           => $myhome,
+    comment        => $comment,
+    purge_ssh_keys => $purge_ssh_keys,
   } # user
 
   if $create_group {
