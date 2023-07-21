@@ -34,6 +34,12 @@
       "operatingsystem": "Scientific"
     },
     {
+      "operatingsystem": "AlmaLinux"
+    },
+    {
+      "operatingsystem": "Rocky"
+    },
+    {
       "operatingsystem": "Solaris"
     },
     {
