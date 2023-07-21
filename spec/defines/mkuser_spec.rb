@@ -26,7 +26,7 @@ describe 'common::mkuser' do
               'uid'            => '1000',
               'gid'            => '1000',
               'shell'          => '/bin/bash',
-              'groups'         => 'alice',
+              'groups'         => ['alice'],
               'password'       => '!!',
               'managehome'     => 'true',
               'home'           => '/home/alice',
@@ -203,22 +203,16 @@ describe 'common::mkuser' do
             message: 'expects a match for Enum',
           },
           'Integer' => {
-            name:    ['uid'],
+            name:    ['uid', 'gid'],
             valid:   [0, 1, 23],
             invalid: ['string', ['array'], { 'ha' => 'sh' }, 2.42, false],
             message: 'expects an Integer',
           },
-          'Optional[Array]' => {
+          'Array' => {
             name:    ['groups'],
             valid:   [['array', 'of', 'strings']],
             invalid: ['string', { 'ha' => 'sh' }, 3, 2.42, false],
-            message: 'expects a value of type Undef or Array',
-          },
-          'Optional[Integer]' => {
-            name:    ['gid'],
-            valid:   [0, 1, 23],
-            invalid: ['string', ['array'], { 'ha' => 'sh' }, 2.42, false],
-            message: 'expects a value of type Undef or Integer',
+            message: 'expects an Array',
           },
           'Optional[Stdlib::Absolutepath]' => {
             name:    ['home'],
@@ -227,7 +221,7 @@ describe 'common::mkuser' do
             message: 'expects a Stdlib::Absolutepath',
           },
           'Optional[String]' => {
-            name:    ['group', 'password', 'ssh_auth_key', 'ssh_auth_key_type'],
+            name:    ['ssh_auth_key'],
             valid:   ['string', :undef],
             invalid: [['array'], { 'ha' => 'sh' }, 3, 2.42, false],
             message: 'expects a value of type Undef or String',
@@ -245,7 +239,7 @@ describe 'common::mkuser' do
             message: 'expects a match for Stdlib::Filemode',
           },
           'String' => {
-            name:    ['comment'],
+            name:    ['comment', 'group', 'password', 'ssh_auth_key_type'],
             valid:   ['string'],
             invalid: [['array'], { 'ha' => 'sh' }, 3, 2.42, false],
             message: 'expects a String value',

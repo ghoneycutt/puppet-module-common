@@ -70,83 +70,32 @@
 #
 define common::mkuser (
   Integer                        $uid,
-  Optional[Integer]              $gid               = undef,
-  Optional[String[1]]            $group             = undef,
+  Integer                        $gid               = $uid,
+  String[1]                      $group             = $name,
   Stdlib::Absolutepath           $shell             = '/bin/bash',
-  Optional[Stdlib::Absolutepath] $home              = undef,
+  Stdlib::Absolutepath           $home              = "/home/${name}",
   Enum['present', 'absent']      $ensure            = 'present',
   Boolean                        $managehome        = true,
   Boolean                        $manage_dotssh     = true,
   String[1]                      $comment           = 'created via puppet',
-  Optional[Array]                $groups            = undef,
-  Optional[String[1]]            $password          = undef,
-  Optional[Stdlib::Filemode]     $mode              = undef,
+  Array                          $groups            = [$name],
+  String[1]                      $password          = '!!',
+  Stdlib::Filemode               $mode              = '0700',
   Optional[String[1]]            $ssh_auth_key      = undef,
   Boolean                        $create_group      = true,
-  Optional[String[1]]            $ssh_auth_key_type = undef,
+  String[1]                      $ssh_auth_key_type = 'ssh-dss',
   Boolean                        $purge_ssh_keys    = false,
 ) {
-  # if gid is unspecified, match with uid
-  if $gid {
-    $mygid = $gid
-  } else {
-    $mygid = $uid
-  } # fi $gid
-
-  # if groups is unspecified, match with name
-  if $groups {
-    $mygroups = $groups
-  } else {
-    $mygroups = $name
-  }
-
-  # if group is unspecified, use the username
-  if $group {
-    $mygroup = $group
-  } else {
-    $mygroup = $name
-  }
-
-  if $password {
-    $mypassword = $password
-  } else {
-    $mypassword = '!!'
-  }
-
-  # if home is unspecified, use /home/<username>
-  if $home {
-    $myhome = $home
-  } else {
-    $myhome = "/home/${name}"
-  }
-
-  # if mode is unspecified, use 0700, which is the default when you enable the
-  # managehome attribute.
-  if $mode {
-    $mymode = $mode
-  } else {
-    $mymode = '0700'
-  }
-
-  # ensure managehome is boolean
-  if is_bool($managehome) {
-    $my_managehome = $managehome
-  } elsif is_string($managehome) {
-    $my_managehome = str2bool($managehome)
-  } else {
-    fail("${name}::managehome must be boolean or string.")
-  }
-
   # create user
   user { $name:
     ensure         => $ensure,
     uid            => $uid,
-    gid            => $mygid,
+    gid            => $gid,
     shell          => $shell,
-    groups         => $mygroups,
-    password       => $mypassword,
-    managehome     => $my_managehome,
-    home           => $myhome,
+    groups         => $groups,
+    password       => $password,
+    managehome     => $managehome,
+    home           => $home,
     comment        => $comment,
     purge_ssh_keys => $purge_ssh_keys,
   } # user
@@ -156,36 +105,27 @@ define common::mkuser (
     if !defined(Group[$name]) {
       group { $name:
         ensure => $ensure,
-        gid    => $mygid,
-        name   => $mygroup,
+        gid    => $gid,
+        name   => $group,
       }
     }
   }
 
   # If managing home, then set the mode of the home directory. This allows for
   # modes other than 0700 for $HOME.
-  if $my_managehome == true {
-    common::mkdir_p { $myhome: }
+  if $managehome == true {
+    common::mkdir_p { $home: }
 
-    file { $myhome:
+    file { $home:
       owner   => $name,
-      group   => $mygroup,
-      mode    => $mymode,
-      require => Common::Mkdir_p[$myhome],
-    }
-
-    # ensure manage_dotssh is boolean
-    if is_bool($manage_dotssh) {
-      $my_manage_dotssh = $manage_dotssh
-    } elsif is_string($manage_dotssh) {
-      $my_manage_dotssh = str2bool($manage_dotssh)
-    } else {
-      fail("${name}::manage_dotssh must be boolean or string.")
+      group   => $group,
+      mode    => $mode,
+      require => Common::Mkdir_p[$home],
     }
 
     # create ~/.ssh
-    if $my_manage_dotssh == true {
-      file { "${myhome}/.ssh":
+    if $manage_dotssh == true {
+      file { "${home}/.ssh":
         ensure  => directory,
         mode    => '0700',
         owner   => $name,
@@ -195,21 +135,14 @@ define common::mkuser (
     }
   }
 
-  # if ssh_auth_key_type is unspecified, use ssh-dss
-  if $ssh_auth_key_type {
-    $my_ssh_auth_key_type = $ssh_auth_key_type
-  } else {
-    $my_ssh_auth_key_type = 'ssh-dss'
-  }
-
   # if we specify a key, then it should be present
   if $ssh_auth_key {
     ssh_authorized_key { $name:
       ensure  => present,
       user    => $name,
       key     => $ssh_auth_key,
-      type    => $my_ssh_auth_key_type,
-      require => File["${myhome}/.ssh"],
+      type    => $ssh_auth_key_type,
+      require => File["${home}/.ssh"],
     }
   }
 }
