@@ -1,141 +1,103 @@
-# == Define: common::mkuser
+# @summary Class to manage users and groups
+#   mkuser creates a user/group that can be realized in the module that employs it
 #
-# mkuser creates a user/group that can be realized in the module that employs it
+#   Copyright 2007-2013 Garrett Honeycutt
+#   contact@garretthoneycutt.com - Licensed GPLv2
 #
-# Copyright 2007-2013 Garrett Honeycutt
-# contact@garretthoneycutt.com - Licensed GPLv2
+#   Actions: creates a user/group
 #
-# Parameters:
-#   $uid               - UID of user
-#   $gid               - GID of user, defaults to UID
-#   $group             - group name of user, defaults to username
-#   $shell             - user's shell, defaults to '/bin/bash'
-#   $home              - home directory, defaults to /home/<username>
-#   $ensure            - present by default
-#   $managehome        - true by default
-#   $manage_dotssh     - true by default. creates ~/.ssh
-#   $comment           - comment field for passwd
-#   $groups            - additional groups the user should be associated with
-#   $password          - defaults to '!!'
-#   $mode              - mode of home directory, defaults to 0700
-#   $ssh_auth_key      - ssh key of the user
-#   $ssh_auth_key_type - defaults to 'ssh-dss'
+#   Requires:
+#     $uid
 #
-# Actions: creates a user/group
+#   Sample Usage:
+#     # create apachehup user and realize it
+#     @mkuser { 'apachehup':
+#         uid        => '32001',
+#         home       => '/home/apachehup',
+#         comment    => 'Apache Restart User',
+#     } # @mkuser
 #
-# Requires:
-#   $uid
+#     realize Common::Mkuser[apachehup]
 #
-# Sample Usage:
-#   # create apachehup user and realize it
-#   @mkuser { 'apachehup':
-#       uid        => '32001',
-#       home       => '/home/apachehup',
-#       comment    => 'Apache Restart User',
-#   } # @mkuser
+# @param uid
+#   UID of user.
 #
-#   realize Common::Mkuser[apachehup]
+# @param gid
+#   GID of user.
+#
+# @param group
+#   Group name of user.
+#
+# @param shell
+#   Absolute path to user shell.
+#
+# @param home
+#   Absolute path to home directory.
+#
+# @param ensure
+#   Ensure parameter of user resource.
+#
+# @param managehome
+#   Managehome attribute of user resource.
+#
+# @param manage_dotssh
+#   If optional `~/.ssh` should be created.
+#
+# @param comment
+#   GECOS field for passwd.
+#
+# @param groups
+#   Additional groups the user should be associated with.
+#
+# @param password
+#   Password crypt for user.
+#
+# @param mode
+#   Mode of home directory.
+#
+# @param ssh_auth_key
+#   Ssh key for the user.
+#
+# @param create_group
+#   Ensure to create the group if it is not already existing.
+#
+# @param ssh_auth_key_type
+#   Type attribute of ssh_authorized_key resource.
+#
+# @param purge_ssh_keys
+#   purge_ssh_keys attribute of the user resource.
+#   Purge any keys that aren’t managed as ssh_authorized_key resources.
 #
 define common::mkuser (
-  $uid,
-  $gid               = undef,
-  $group             = undef,
-  $shell             = undef,
-  $home              = undef,
-  $ensure            = 'present',
-  $managehome        = true,
-  $manage_dotssh     = true,
-  $comment           = 'created via puppet',
-  $groups            = undef,
-  $password          = undef,
-  $mode              = undef,
-  $ssh_auth_key      = undef,
-  $create_group      = true,
-  $ssh_auth_key_type = undef,
-  $purge_ssh_keys    = undef,
+  Integer                        $uid,
+  Integer                        $gid               = $uid,
+  String[1]                      $group             = $name,
+  Stdlib::Absolutepath           $shell             = '/bin/bash',
+  Stdlib::Absolutepath           $home              = "/home/${name}",
+  Enum['present', 'absent']      $ensure            = 'present',
+  Boolean                        $managehome        = true,
+  Boolean                        $manage_dotssh     = true,
+  String[1]                      $comment           = 'created via puppet',
+  Array                          $groups            = [$name],
+  String[1]                      $password          = '!!',
+  Stdlib::Filemode               $mode              = '0700',
+  Optional[String[1]]            $ssh_auth_key      = undef,
+  Boolean                        $create_group      = true,
+  String[1]                      $ssh_auth_key_type = 'ssh-dss',
+  Boolean                        $purge_ssh_keys    = false,
 ) {
-
-  if $shell {
-    $myshell = $shell
-  } else {
-    $myshell = '/bin/bash'
-  }
-
-  # if gid is unspecified, match with uid
-  if $gid {
-    $mygid = $gid
-  } else {
-    $mygid = $uid
-  } # fi $gid
-
-  # if groups is unspecified, match with name
-  if $groups {
-    $mygroups = $groups
-  } else {
-    $mygroups = $name
-  }
-
-  # if group is unspecified, use the username
-  if $group {
-    $mygroup = $group
-  } else {
-    $mygroup = $name
-  }
-
-  if $password {
-    $mypassword = $password
-  } else {
-    $mypassword = '!!'
-  }
-
-  # if home is unspecified, use /home/<username>
-  if $home {
-    $myhome = $home
-  } else {
-    $myhome = "/home/${name}"
-  }
-
-  # if mode is unspecified, use 0700, which is the default when you enable the
-  # managehome attribute.
-  if $mode {
-    $mymode = $mode
-  } else {
-    $mymode = '0700'
-  }
-
-  if $purge_ssh_keys != undef {
-    $mypurgekey = str2bool($purge_ssh_keys)
-    validate_bool($mypurgekey)
-  } else {
-    $mypurgekey = false
-  }
-
-  if versioncmp("${::puppetversion}", '3.6') >= 0 { # lint:ignore:only_variable_string
-    User {
-      purge_ssh_keys => $mypurgekey,
-    }
-  }
-
-  # ensure managehome is boolean
-  if is_bool($managehome){
-    $my_managehome = $managehome
-  } elsif is_string($managehome) {
-    $my_managehome = str2bool($managehome)
-  } else {
-    fail("${name}::managehome must be boolean or string.")
-  }
-
   # create user
   user { $name:
-    ensure     => $ensure,
-    uid        => $uid,
-    gid        => $mygid,
-    shell      => $myshell,
-    groups     => $mygroups,
-    password   => $mypassword,
-    managehome => $my_managehome,
-    home       => $myhome,
-    comment    => $comment,
+    ensure         => $ensure,
+    uid            => $uid,
+    gid            => $gid,
+    shell          => $shell,
+    groups         => $groups,
+    password       => $password,
+    managehome     => $managehome,
+    home           => $home,
+    comment        => $comment,
+    purge_ssh_keys => $purge_ssh_keys,
   } # user
 
   if $create_group {
@@ -143,37 +105,27 @@ define common::mkuser (
     if !defined(Group[$name]) {
       group { $name:
         ensure => $ensure,
-        gid    => $mygid,
-        name   => $mygroup,
+        gid    => $gid,
+        name   => $group,
       }
     }
   }
 
   # If managing home, then set the mode of the home directory. This allows for
   # modes other than 0700 for $HOME.
-  if $my_managehome == true {
+  if $managehome == true {
+    common::mkdir_p { $home: }
 
-    common::mkdir_p { $myhome: }
-
-    file { $myhome:
+    file { $home:
       owner   => $name,
-      group   => $mygroup,
-      mode    => $mymode,
-      require => Common::Mkdir_p[$myhome],
-    }
-
-    # ensure manage_dotssh is boolean
-    if is_bool($manage_dotssh){
-      $my_manage_dotssh = $manage_dotssh
-    } elsif is_string($manage_dotssh) {
-      $my_manage_dotssh = str2bool($manage_dotssh)
-    } else {
-      fail("${name}::manage_dotssh must be boolean or string.")
+      group   => $group,
+      mode    => $mode,
+      require => Common::Mkdir_p[$home],
     }
 
     # create ~/.ssh
-    if $my_manage_dotssh == true {
-      file { "${myhome}/.ssh":
+    if $manage_dotssh == true {
+      file { "${home}/.ssh":
         ensure  => directory,
         mode    => '0700',
         owner   => $name,
@@ -183,21 +135,14 @@ define common::mkuser (
     }
   }
 
-  # if ssh_auth_key_type is unspecified, use ssh-dss
-  if $ssh_auth_key_type {
-    $my_ssh_auth_key_type = $ssh_auth_key_type
-  } else {
-    $my_ssh_auth_key_type = 'ssh-dss'
-  }
-
   # if we specify a key, then it should be present
   if $ssh_auth_key {
     ssh_authorized_key { $name:
       ensure  => present,
       user    => $name,
       key     => $ssh_auth_key,
-      type    => $my_ssh_auth_key_type,
-      require => File["${myhome}/.ssh"],
+      type    => $ssh_auth_key_type,
+      require => File["${home}/.ssh"],
     }
   }
 }

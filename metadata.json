@@ -3,17 +3,19 @@
   "version": "1.10.0",
   "author": "ghoneycutt",
   "summary": "common module to be applied to all nodes",
-  "description": "Provide ability to include modules that are common to all nodes.",
   "license": "Apache-2.0",
   "source": "git://github.com/ghoneycutt/puppet-module-common.git",
   "project_page": "https://github.com/ghoneycutt/puppet-module-common",
   "issues_url": "https://github.com/ghoneycutt/puppet-module-common/issues",
-  "requirements": [
-    {"name":"puppet","version_requirement":">= 3.0.0 < 8.0.0"}
-  ],
   "dependencies": [
-    {"name":"puppetlabs/sshkeys_core","version_requirement":">= 1.0.1 < 3.0.0"},
-    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 9.0.0"}
+    {
+      "name": "puppetlabs/sshkeys_core",
+      "version_requirement": ">= 1.0.1 < 3.0.0"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 5.0.0 < 9.0.0"
+    }
   ],
   "operatingsystem_support": [
     {
@@ -32,6 +34,12 @@
       "operatingsystem": "Scientific"
     },
     {
+      "operatingsystem": "AlmaLinux"
+    },
+    {
+      "operatingsystem": "Rocky"
+    },
+    {
       "operatingsystem": "Solaris"
     },
     {
@@ -43,5 +51,15 @@
     {
       "operatingsystem": "Ubuntu"
     }
-  ]
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.0.0 < 9.0.0"
+    }
+  ],
+  "description": "Provide ability to include modules that are common to all nodes.",
+  "pdk-version": "3.0.0",
+  "template-url": "pdk-default#3.0.0",
+  "template-ref": "tags/3.0.0-0-g056e50d"
 }
