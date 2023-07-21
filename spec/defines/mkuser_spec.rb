@@ -187,11 +187,7 @@ describe 'common::mkuser' do
       end
 
       describe 'variable type and content validations' do
-        let(:validation_params) do
-          {
-            uid: 1000,
-          }
-        end
+        let(:validation_params) { { uid: 1000 } }
 
         validations = {
           'Boolean' => {
