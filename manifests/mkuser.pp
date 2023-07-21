@@ -69,22 +69,22 @@
 #   Purge any keys that aren’t managed as ssh_authorized_key resources.
 #
 define common::mkuser (
-  Integer                           $uid,
-  Optional[Integer]                 $gid               = undef,
-  Optional[String[1]]               $group             = undef,
-  Stdlib::Absolutepath              $shell             = '/bin/bash',
-  Optional[Stdlib::Absolutepath]    $home              = undef,
-  Enum['present', 'absent', 'role'] $ensure            = 'present',
-  Boolean                           $managehome        = true,
-  Boolean                           $manage_dotssh     = true,
-  String[1]                         $comment           = 'created via puppet',
-  Optional[Array]                   $groups            = undef,
-  Optional[String[1]]               $password          = undef,
-  Optional[Stdlib::Filemode]        $mode              = undef,
-  Optional[String[1]]               $ssh_auth_key      = undef,
-  Boolean                           $create_group      = true,
-  Optional[String[1]]               $ssh_auth_key_type = undef,
-  Boolean                           $purge_ssh_keys    = false,
+  Integer                        $uid,
+  Optional[Integer]              $gid               = undef,
+  Optional[String[1]]            $group             = undef,
+  Stdlib::Absolutepath           $shell             = '/bin/bash',
+  Optional[Stdlib::Absolutepath] $home              = undef,
+  Enum['present', 'absent']      $ensure            = 'present',
+  Boolean                        $managehome        = true,
+  Boolean                        $manage_dotssh     = true,
+  String[1]                      $comment           = 'created via puppet',
+  Optional[Array]                $groups            = undef,
+  Optional[String[1]]            $password          = undef,
+  Optional[Stdlib::Filemode]     $mode              = undef,
+  Optional[String[1]]            $ssh_auth_key      = undef,
+  Boolean                        $create_group      = true,
+  Optional[String[1]]            $ssh_auth_key_type = undef,
+  Boolean                        $purge_ssh_keys    = false,
 ) {
   # if gid is unspecified, match with uid
   if $gid {

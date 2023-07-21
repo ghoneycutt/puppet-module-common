@@ -20,48 +20,24 @@ describe 'common::mkuser' do
         let(:params) { { uid: 1000 } }
 
         it do
-          is_expected.to contain_user('alice').with(
+          is_expected.to contain_user('alice').only_with(
             {
-              'uid' => '1000',
-              'gid'        => '1000',
-              'shell'      => '/bin/bash',
-              'home'       => '/home/alice',
-              'ensure'     => 'present',
-              'groups'     => 'alice',
-              'password'   => '!!',
-              'managehome' => 'true',
-              'comment'    => 'created via puppet',
+              'ensure'         => 'present',
+              'uid'            => '1000',
+              'gid'            => '1000',
+              'shell'          => '/bin/bash',
+              'groups'         => 'alice',
+              'password'       => '!!',
+              'managehome'     => 'true',
+              'home'           => '/home/alice',
+              'comment'        => 'created via puppet',
+              'purge_ssh_keys' => false
             },
           )
         end
 
         it do
-          is_expected.to contain_file('/home/alice').with(
-            {
-              'owner' => 'alice',
-              'group'   => 'alice',
-              'mode'    => '0700',
-             'require' => 'Common::Mkdir_p[/home/alice]',
-            },
-          )
-        end
-
-        it do
-          is_expected.to contain_file('/home/alice/.ssh').with(
-            {
-              'ensure' => 'directory',
-              'mode'    => '0700',
-              'owner'   => 'alice',
-              'group'   => 'alice',
-              'require' => 'User[alice]',
-            },
-          )
-        end
-
-        it { is_expected.to contain_common__mkdir_p('/home/alice') }
-
-        it do
-          is_expected.to contain_group('alice').with(
+          is_expected.to contain_group('alice').only_with(
             {
               'ensure' => 'present',
               'gid'    => 1000,
@@ -70,55 +46,24 @@ describe 'common::mkuser' do
           )
         end
 
-        it { is_expected.not_to contain_ssh_authorized_key('alice') }
-
+        it { is_expected.to contain_common__mkdir_p('/home/alice') }
         it { is_expected.to contain_exec('mkdir_p-/home/alice') } # only needed for 100% resource coverage
-      end
-
-      context 'user alice with custom values' do
-        let(:params) do
-          {
-            'uid'      => 2000,
-            'group'    => 'superusers',
-            'gid'      => 2000,
-            'shell'    => '/bin/zsh',
-            'home'     => '/home/superu',
-            'groups'   => ['superusers', 'development', 'admins'],
-            'password' => 'puppet',
-            'mode'     => '0701',
-            'comment'  => 'a puppet master',
-          }
-        end
 
         it do
-          is_expected.to contain_user('alice').with(
+          is_expected.to contain_file('/home/alice').only_with(
             {
-              'uid' => '2000',
-              'gid'      => '2000',
-              'shell'    => '/bin/zsh',
-              'home'     => '/home/superu',
-              'groups'   => ['superusers', 'development', 'admins'],
-              'password' => 'puppet',
-              'comment'  => 'a puppet master',
+              'owner'  => 'alice',
+              'group'  => 'alice',
+              'mode'   => '0700',
+             'require' => 'Common::Mkdir_p[/home/alice]',
             },
           )
         end
 
         it do
-          is_expected.to contain_file('/home/superu').with(
+          is_expected.to contain_file('/home/alice/.ssh').only_with(
             {
-              'owner' => 'alice',
-              'group'   => 'superusers',
-              'mode'    => '0701',
-              'require' => 'Common::Mkdir_p[/home/superu]',
-            },
-          )
-        end
-
-        it do
-          is_expected.to contain_file('/home/superu/.ssh').with(
-            {
-              'ensure' => 'directory',
+              'ensure'  => 'directory',
               'mode'    => '0700',
               'owner'   => 'alice',
               'group'   => 'alice',
@@ -127,93 +72,118 @@ describe 'common::mkuser' do
           )
         end
 
-        it { is_expected.to contain_common__mkdir_p('/home/superu') }
-
-        it { is_expected.not_to contain_ssh_authorized_key('myuser') }
-
-        it { is_expected.to contain_exec('mkdir_p-/home/superu') } # only needed for 100% resource coverage
-
+        it { is_expected.not_to contain_ssh_authorized_key('alice') }
       end
 
-      context 'do not manage home' do
-        let(:params) do
-          {
-            'uid'        => 1000,
-            'managehome' => false
-          }
-        end
+      context 'with uid set to valid value' do
+        let(:params) { { uid: 242 } }
 
-        it { is_expected.not_to contain_file('/home/alice') }
+        it { is_expected.to contain_user('alice').with_uid(242) }
+        it { is_expected.to contain_user('alice').with_gid(242) }
+      end
 
-        it { is_expected.not_to contain_common__mkdir_p('/home/alice') }
+      context 'with gid set to valid value' do
+        let(:params) { { uid: 1000, gid: 242 } }
+
+        it { is_expected.to contain_user('alice').with_gid(242) }
+        it { is_expected.to contain_group('alice').with_gid(242) }
+      end
+
+      context 'with shell set to valid value' do
+        let(:params) { { uid: 1000, shell: '/test/ing' } }
+
+        it { is_expected.to contain_user('alice').with_shell('/test/ing') }
+      end
+
+      context 'with home set to valid value' do
+        let(:params) { { uid: 1000, home: '/test/ing' } }
+
+        it { is_expected.to contain_user('alice').with_home('/test/ing') }
+        it { is_expected.to contain_common__mkdir_p('/test/ing') }
+        it { is_expected.to contain_file('/test/ing').with_require('Common::Mkdir_p[/test/ing]') }
+        it { is_expected.to contain_exec('mkdir_p-/test/ing') } # only needed for 100% resource coverage
+        it { is_expected.to contain_file('/test/ing/.ssh') }
+      end
+
+      context 'with home set to valid value when ssh_auth_key is true' do
+        let(:params) { { uid: 1000, home: '/test/ing', ssh_auth_key: 'not-tested' } }
+
+        it { is_expected.to contain_ssh_authorized_key('alice').with_require('File[/test/ing/.ssh]') }
+      end
+
+      context 'with ensure set to valid value' do
+        let(:params) { { uid: 1000, ensure: 'absent' } }
+
+        it { is_expected.to contain_user('alice').with_ensure('absent') }
+      end
+
+      context 'with managehome set to valid false' do
+        let(:params) { { uid: 1000, managehome: false } }
 
         it { is_expected.to contain_user('alice').with_managehome(false) }
+        it { is_expected.not_to contain_common__mkdir_p('/home/alice') }
+        it { is_expected.not_to contain_file('/home/alice') }
+        it { is_expected.not_to contain_file('/home/alice/.ssh') }
       end
 
-      context 'do not manage dotssh' do
-        let(:params) do
-          {
-            'uid'           => 1000,
-            'manage_dotssh' => false
-          }
-        end
+      context 'with manage_dotssh set to valid false' do
+        let(:params) { { uid: 1000, manage_dotssh: false } }
 
         it { is_expected.not_to contain_file('/home/alice/.ssh') }
+      end
+
+      context 'with comment set to valid value' do
+        let(:params) { { uid: 1000, comment: 'testing' } }
+
+        it { is_expected.to contain_user('alice').with_comment('testing') }
+      end
+
+      context 'with groups set to valid value' do
+        let(:params) { { uid: 1000, groups: ['testing'] } }
+
+        it { is_expected.to contain_user('alice').with_groups(['testing']) }
+      end
+
+      context 'with password set to valid value' do
+        let(:params) { { uid: 1000, password: 'testing' } }
+
+        it { is_expected.to contain_user('alice').with_password('testing') }
+      end
+
+      context 'with mode set to valid value' do
+        let(:params) { { uid: 1000, mode: '0242' } }
+
+        it { is_expected.to contain_file('/home/alice').with_mode('0242') }
+      end
+
+      context 'with ssh_auth_key set to valid value' do
+        let(:params) { { uid: 1000, ssh_auth_key: 'testing' } }
+
+        it { is_expected.to contain_ssh_authorized_key('alice').with_key('testing') }
+      end
+
+      context 'with create_group set to valid false' do
+        let(:params) { { uid: 1000, create_group: false } }
+
+        it { is_expected.not_to contain_group('alice') }
+      end
+
+      context 'with ssh_auth_key_type set to valid value' do
+        let(:params) { { uid: 1000, ssh_auth_key_type: 'testing' } }
 
         it { is_expected.not_to contain_ssh_authorized_key('alice') }
       end
 
-      describe 'with ssh_auth_key parameter specified' do
-        context 'with defaults for ssh_auth_key_type parameter' do
-          let(:params) do
-            {
-              'uid'          => 1000,
-              'ssh_auth_key' => 'AAAB3NzaC1yc2EAAAABIwAAAQEArGElx46pD6NNnlxVaTbp0ZJMgBKCmbTCT3RaeCk0ZUJtQ8wkcwTtqIXmmiuFsynUT0DFSd8UIodnBOPqitimmooAVAiAi30TtJVzADfPScMiUnBJKZajIBkEMkwUcqsfh63' \
-                '0jyBvLPE/kyQcxbEeGtbu1DG3monkeymanOBW1AKc5o+cJLXcInLnbowMG7NXzujT3BRYn/9s5vtT1V9cuZJs4XLRXQ50NluxJI7sVfRPVvQI9EMbTS4AFBXUej3yfgaLSV+nPZC/lmJ2gR4t/tKvMFF9m16f8' \
-                'IcZKK7o0rK7v81G/tREbOT5YhcKLK+0wBfR6RsmHzwy4EddZloyLQ==',
-            }
-          end
+      context 'with ssh_auth_key_type set to valid value when ssh_auth_key is valid' do
+        let(:params) { { uid: 1000, ssh_auth_key_type: 'testing', ssh_auth_key: 'not-tested' } }
 
-          it do
-            is_expected.to contain_ssh_authorized_key('alice').with(
-              {
-                'ensure'  => 'present',
-                'user'    => 'alice',
-                'key'     => 'AAAB3NzaC1yc2EAAAABIwAAAQEArGElx46pD6NNnlxVaTbp0ZJMgBKCmbTCT3RaeCk0ZUJtQ8wkcwTtqIXmmiuFsynUT0DFSd8UIodnBOPqitimmooAVAiAi30TtJVzADfPScMiUnBJKZajIBkEMkwUcqsfh630jyBv' \
-                  'LPE/kyQcxbEeGtbu1DG3monkeymanOBW1AKc5o+cJLXcInLnbowMG7NXzujT3BRYn/9s5vtT1V9cuZJs4XLRXQ50NluxJI7sVfRPVvQI9EMbTS4AFBXUej3yfgaLSV+nPZC/lmJ2gR4t/tKvMFF9m16f8IcZKK7o0rK7v81G/tREbO' \
-                  'T5YhcKLK+0wBfR6RsmHzwy4EddZloyLQ==',
-                'type'    => 'ssh-dss',
-                'require' => 'File[/home/alice/.ssh]',
-              },
-            )
-          end
-        end
+        it { is_expected.to contain_ssh_authorized_key('alice').with_type('testing') }
+      end
 
-        context 'with ssh_auth_key_type parameter specified' do
-          let(:params) do
-            {
-              'uid'               => 1000,
-              'ssh_auth_key'      => 'AAAB3NzaC1yc2EAAAABIwAAAQEArGElx46pD6NNnlxVaTbp0ZJMgBKCmbTCT3RaeCk0ZUJtQ8wkcwTtqIXmmiuFsynUT0DFSd8UIodnBOPqitimmooAVAiAi30TtJVzADfPScMiUnBJKZajIBkEMkwUcq' \
-                'sfh630jyBvLPE/kyQcxbEeGtbu1DG3monkeymanOBW1AKc5o+cJLXcInLnbowMG7NXzujT3BRYn/9s5vtT1V9cuZJs4XLRXQ50NluxJI7sVfRPVvQI9EMbTS4AFBXUej3yfgaLSV+nPZC/lmJ2gR4t/tKvMFF9m16f8IcZKK7o0rK7' \
-                'v81G/tREbOT5YhcKLK+0wBfR6RsmHzwy4EddZloyLQ==',
-              'ssh_auth_key_type' => 'ssh-rsa',
-            }
-          end
+      context 'with purge_ssh_keys set to valid true' do
+        let(:params) { { uid: 1000, purge_ssh_keys: false } }
 
-          it do
-            is_expected.to contain_ssh_authorized_key('alice').with(
-              {
-                'ensure'  => 'present',
-                'user'    => 'alice',
-                'key'     => 'AAAB3NzaC1yc2EAAAABIwAAAQEArGElx46pD6NNnlxVaTbp0ZJMgBKCmbTCT3RaeCk0ZUJtQ8wkcwTtqIXmmiuFsynUT0DFSd8UIodnBOPqitimmooAVAiAi30TtJVzADfPScMiUnBJKZajIBkEMkwUcqsfh630jy' \
-                  'BvLPE/kyQcxbEeGtbu1DG3monkeymanOBW1AKc5o+cJLXcInLnbowMG7NXzujT3BRYn/9s5vtT1V9cuZJs4XLRXQ50NluxJI7sVfRPVvQI9EMbTS4AFBXUej3yfgaLSV+nPZC/lmJ2gR4t/tKvMFF9m16f8IcZKK7o0rK7v81G/t' \
-                  'REbOT5YhcKLK+0wBfR6RsmHzwy4EddZloyLQ==',
-                'type'    => 'ssh-rsa',
-                'require' => 'File[/home/alice/.ssh]',
-              },
-            )
-          end
-        end
+        it { is_expected.to contain_user('alice').with_purge_ssh_keys(false) }
       end
 
       describe 'variable type and content validations' do
@@ -225,10 +195,64 @@ describe 'common::mkuser' do
 
         validations = {
           'Boolean' => {
-            name:    ['managehome', 'manage_dotssh', 'purge_ssh_keys'],
+            name:    ['managehome', 'manage_dotssh', 'create_group', 'purge_ssh_keys'],
             valid:   [true, false],
             invalid: ['invalid', ['array'], { 'ha' => 'sh' }, 3, 2.42, nil],
             message: 'expects a Boolean',
+          },
+          'Enum[present, absent]' => {
+            name:    ['ensure'],
+            valid:   ['present', 'absent'],
+            invalid: ['invalid', ['array'], { 'ha' => 'sh' }, -1, 2.42, false],
+            message: 'expects a match for Enum',
+          },
+          'Integer' => {
+            name:    ['uid'],
+            valid:   [0, 1, 23],
+            invalid: ['string', ['array'], { 'ha' => 'sh' }, 2.42, false],
+            message: 'expects an Integer',
+          },
+          'Optional[Array]' => {
+            name:    ['groups'],
+            valid:   [['array', 'of', 'strings']],
+            invalid: ['string', { 'ha' => 'sh' }, 3, 2.42, false],
+            message: 'expects a value of type Undef or Array',
+          },
+          'Optional[Integer]' => {
+            name:    ['gid'],
+            valid:   [0, 1, 23],
+            invalid: ['string', ['array'], { 'ha' => 'sh' }, 2.42, false],
+            message: 'expects a value of type Undef or Integer',
+          },
+          'Optional[Stdlib::Absolutepath]' => {
+            name:    ['home'],
+            valid:   ['/home/alice'],
+            invalid: ['../invalid', ['array'], { 'ha' => 'sh' }, 3, 2.42, false],
+            message: 'expects a Stdlib::Absolutepath',
+          },
+          'Optional[String]' => {
+            name:    ['group', 'password', 'ssh_auth_key', 'ssh_auth_key_type'],
+            valid:   ['string', :undef],
+            invalid: [['array'], { 'ha' => 'sh' }, 3, 2.42, false],
+            message: 'expects a value of type Undef or String',
+          },
+          'Stdlib::Absolutepath' => {
+            name:    ['shell'],
+            valid:   ['/home/alice'],
+            invalid: ['../invalid', ['array'], { 'ha' => 'sh' }, 3, 2.42, false],
+            message: 'expects a Stdlib::Absolutepath',
+          },
+          'Stdlib::Filemode' => {
+            name:    ['mode'],
+            valid:   ['0644', '0755', '0640', '1740'],
+            invalid: [2770, '0844', '00644', 'string', ['array'], { 'ha' => 'sh' }, 3, 2.42, false],
+            message: 'expects a match for Stdlib::Filemode',
+          },
+          'String' => {
+            name:    ['comment'],
+            valid:   ['string'],
+            invalid: [['array'], { 'ha' => 'sh' }, 3, 2.42, false],
+            message: 'expects a String value',
           },
         }
 

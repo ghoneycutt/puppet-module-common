@@ -118,7 +118,6 @@ describe 'common' do
 
         it { is_expected.to contain_class('puppet::agent') }
       end
-
     end
   end
 end

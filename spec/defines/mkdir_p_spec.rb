@@ -15,7 +15,6 @@ describe 'common::mkdir_p' do
     on_supported_os(redhat).each do |_os, facts|
       let(:facts) { facts }
 
-
       context 'is_expected.to create new directory' do
         let(:title) { '/some/dir/structure' }
 
