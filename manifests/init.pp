@@ -197,7 +197,7 @@ class common (
   }
 
   # only allow supported OS's
-  case $::osfamily {
+  case $facts['os']['family'] {
     'debian': {
       # validate type and convert string to boolean if necessary
       if is_string($enable_debian) {
@@ -243,7 +243,7 @@ class common (
       }
     }
     default: {
-      fail("Supported OS families are Debian, RedHat, Solaris, and Suse. Detected osfamily is ${::osfamily}.")
+      fail("Supported OS families are Debian, RedHat, Solaris, and Suse. Detected osfamily is ${facts['os']['family']}.")
     }
   }
 
